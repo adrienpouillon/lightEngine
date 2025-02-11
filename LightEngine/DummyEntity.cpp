@@ -14,12 +14,21 @@ void DummyEntity::OnCollision(Entity* other)
 	}
 	else
 	{
-		GetScene<SampleScene>()->CreatDummyEntity(2,sf::Color::Cyan, GetPosition(mShape.getRadius() + 3.f, mShape.getRadius() + 3.f),true);
+		SampleScene* scene = GetScene<SampleScene>();
+		DuplicateDummyEntity(mShape, scene);
+		DuplicateDummyEntity(mShape, scene);
 	}
-	
 }
 
 void DummyEntity::UpdateEntity()
 {
 	mShape.setRadius(mShape.getRadius() + 0.05f);
+}
+
+void  DummyEntity::DuplicateDummyEntity(sf::CircleShape shape, SampleScene* scene)
+{
+	sf::Color color = scene->ChooseColor(scene->GenerateRandomNumber(WHITE, BLACK));
+	int radius = scene->GenerateRandomNumber(1, 5);
+	float moreLessPos = (float)scene->GenerateRandomNumber(1, 5);
+	scene->CreatDummyEntity(radius, color, GetPosition(shape.getRadius() + moreLessPos, shape.getRadius() + moreLessPos), true);
 }
