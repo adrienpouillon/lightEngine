@@ -20,7 +20,7 @@ void DummyEntity::OnCollision(Entity* other)
 	}
 }
 
-void DummyEntity::UpdateEntity()
+void DummyEntity::OnUpdate()
 {
 	mShape.setRadius(mShape.getRadius() + 0.05f);
 }

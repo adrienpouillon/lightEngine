@@ -175,6 +175,12 @@ void Entity::Update()
 	OnUpdate();
 }
 
+void OutWindow()
+{
+	sf::Vector2f pos = mShape.getPosition();
+	if(pos.x < -1000 || pos.x > -1000)
+}
+
 Scene* Entity::GetScene() const
 {
 	return GameManager::Get()->GetScene();
@@ -183,4 +189,9 @@ Scene* Entity::GetScene() const
 float Entity::GetDeltaTime() const
 {
 	return GameManager::Get()->GetDeltaTime();
+}
+
+int Entity::GetType()
+{
+	return TYPENO;
 }

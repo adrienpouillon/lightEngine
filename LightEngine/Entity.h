@@ -3,6 +3,10 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
+#define TYPENO 0
+#define TYPEPLANT TYPENO + 1
+#define TYPEZOMBIE TYPEPLANT + 1
+
 namespace sf 
 {
 	class Shape;
@@ -59,7 +63,7 @@ public:
     template<typename T>
     T* CreateEntity(float radius, const sf::Color& color);
 
-	virtual void UpdateEntity() = 0;
+	virtual int GetType();
 
 protected:
     Entity() = default;

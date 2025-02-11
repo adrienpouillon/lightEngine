@@ -53,4 +53,5 @@ sf::Color Scene::ChooseColor(int index)
 		return sf::Color::Black;
 		break;
 	}
+	return sf::Color::White;
 }

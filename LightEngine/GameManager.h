@@ -22,6 +22,7 @@ class GameManager
 	std::list<Entity*> mEntitiesToAdd;
 
 	sf::RenderWindow* mpWindow;
+	sf::Vector2i mSize;
 	sf::Font mFont;
 
 	Scene* mpScene;
@@ -58,6 +59,8 @@ public:
 	float GetDeltaTime() const { return mDeltaTime; }
 	Scene* GetScene() const { return mpScene; }
 	sf::Font& GetFont() { return mFont; };
+
+	sf::Vector2i WindowSize();
 
 	friend Debug;
 	friend Scene;

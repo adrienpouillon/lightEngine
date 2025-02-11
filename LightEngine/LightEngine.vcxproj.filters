@@ -7,6 +7,9 @@
     <Filter Include="Sample">
       <UniqueIdentifier>{656b759f-efb2-4f59-b546-0dd585a90074}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PVZ">
+      <UniqueIdentifier>{6f5d1132-8f57-4994-94d3-59576f11c914}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -31,6 +34,21 @@
     <ClCompile Include="SampleScene.cpp">
       <Filter>Sample</Filter>
     </ClCompile>
+    <ClCompile Include="Plant.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Alive.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Garden.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Shot.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -53,6 +71,21 @@
     </ClInclude>
     <ClInclude Include="SampleScene.h">
       <Filter>Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="Plant.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Alive.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Garden.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Shot.h">
+      <Filter>PVZ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -57,10 +57,10 @@ void SampleScene::TrySetSelectedEntity(DummyEntity* pEntity, int x, int y)
 
 void SampleScene::OnUpdate()
 {
-	for (int i = 0; i < mAllEntity.size(); i++)
-	{
-		mAllEntity[i]->UpdateEntity();
-	}
+	//for (int i = 0; i < mAllEntity.size(); i++)
+	//{
+	//	mAllEntity[i]->UpdateEntity();
+	//}
 	if(pEntitySelected != nullptr)
 	{
 		sf::Vector2f position = pEntitySelected->GetPosition();

@@ -8,7 +8,7 @@ class DummyEntity : public Entity
 public:
 	void OnCollision(Entity* other) override;
 
-	virtual void UpdateEntity();
+	virtual void OnUpdate();
 
 	void DuplicateDummyEntity(sf::CircleShape shape, SampleScene* scene);
 
