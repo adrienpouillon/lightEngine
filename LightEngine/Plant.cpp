@@ -7,6 +7,8 @@
 void Plant::OnInitialize()
 {
 	Alive::OnInitialize(5000);
+	StateManager::Init(3, 3, 1, SHOOTINGUSE, this);
+	SetAllColor(sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green);
 }
 
 void Plant::OnCollision(Entity* other)
@@ -22,17 +24,19 @@ void Plant::OnCollision(Entity* other)
 			Alive::LifeLessLess();
 		}
 	}
+	SetIsCollide(true);
 }
 
 void Plant::OnUpdate()
 {
 	Alive::OnUpdate();
+	StateManager::OnUpdate(GetDeltaTime());
 }
 
 void Plant::ActionDead()
 {
-
-	Destroy();
+	StateManager::Destroy();
+	Entity::Destroy();
 }
 
 void Plant::SetLife(int life)

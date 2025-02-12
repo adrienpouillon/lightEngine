@@ -60,7 +60,7 @@ public:
 	Scene* GetScene() const { return mpScene; }
 	sf::Font& GetFont() { return mFont; };
 
-	sf::Vector2i WindowSize();
+	sf::Vector2i GetWindowSize();
 
 	friend Debug;
 	friend Scene;

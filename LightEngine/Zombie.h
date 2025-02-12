@@ -1,8 +1,9 @@
 #pragma once
 #include "Entity.h"
 #include "Alive.h"
+#include "StateManager.h"
 
-class Zombie :public Entity, public Alive
+class Zombie :public Entity, public Alive, public StateManager
 {
 protected:
 

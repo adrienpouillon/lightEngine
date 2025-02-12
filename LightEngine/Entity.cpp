@@ -69,6 +69,26 @@ bool Entity::IsInside(float x, float y) const
 	return (dx * dx + dy * dy) < (radius * radius);
 }
 
+void Entity::OutWindow(sf::Vector2f extentionLeftWindow, sf::Vector2f extentionRightWindow)
+{
+	sf::Vector2f pos = mShape.getPosition();
+	if (pos.x < 0 - extentionLeftWindow.x || pos.x > GameManager::Get()->GetWindowSize().x + extentionRightWindow.x
+	 || pos.y < 0 - extentionLeftWindow.y || pos.y > GameManager::Get()->GetWindowSize().y + extentionRightWindow.y)
+	{
+		OnCollision(nullptr);
+	}
+}
+
+void Entity::OutWindow(float extentionLeftWindow, float extentionRightWindow)
+{
+	sf::Vector2f pos = mShape.getPosition();
+	if (pos.x < 0 - extentionLeftWindow || pos.x > GameManager::Get()->GetWindowSize().x + extentionRightWindow
+	 || pos.y < 0 - extentionLeftWindow || pos.y > GameManager::Get()->GetWindowSize().y + extentionRightWindow)
+	{
+		OnCollision(nullptr);
+	}
+}
+
 void Entity::Destroy()
 {
 	mToDestroy = true;
@@ -143,6 +163,16 @@ void Entity::SetDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
+sf::Vector2f Entity::GetDirection()
+{
+	return mDirection;
+}
+
+float Entity::GetSpeed()
+{
+	return mSpeed;
+}
+
 void Entity::Update()
 {
 	float dt = GetDeltaTime();
@@ -173,12 +203,6 @@ void Entity::Update()
 	}
 
 	OnUpdate();
-}
-
-void OutWindow()
-{
-	sf::Vector2f pos = mShape.getPosition();
-	if(pos.x < -1000 || pos.x > -1000)
 }
 
 Scene* Entity::GetScene() const

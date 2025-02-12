@@ -38,7 +38,7 @@ GameManager::~GameManager()
 void GameManager::CreateWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit, sf::Color clearColor)
 {
 	_ASSERT(mpWindow == nullptr);
-	mSize = sf::Vector2i(width, height)
+	mSize = sf::Vector2i(width, height);
 	mpWindow = new sf::RenderWindow(sf::VideoMode(width, height), title);
 	mpWindow->setFramerateLimit(fpsLimit);
 
@@ -160,7 +160,7 @@ void GameManager::Draw()
 	mpWindow->display();
 }
 
-sf::Vector2i GameManager::WindowSize()
+sf::Vector2i GameManager::GetWindowSize()
 {
 	return mSize;
 }

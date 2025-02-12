@@ -37,6 +37,8 @@ void Garden::CreatZombie(float radius, sf::Color color, sf::Vector2f pos, bool r
 	zombie->SetPosition(pos.x, pos.y);
 	zombie->SetRigidBody(rigidBody);
 	zombie->SetLife(life);
+	zombie->Init(3, 3, 1, SHOOTINGUSE, zombie);
+	zombie->SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::Red, sf::Color::Yellow);
 }
 
 void Garden::CreatPlant(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life)
@@ -48,6 +50,8 @@ void Garden::CreatPlant(float radius, sf::Color color, sf::Vector2f pos, bool ri
 	plant->SetPosition(pos.x, pos.y);
 	plant->SetRigidBody(rigidBody);
 	plant->SetLife(life * 100);
+	plant->Init(3, 3, 1, SHOOTINGUSE, plant);
+	plant->SetAllColor(sf::Color::Green, sf::Color::Green, sf::Color::Red, sf::Color::Yellow, sf::Color::Cyan, sf::Color::White, sf::Color::White);
 }
 
 void Garden::OnEvent(const sf::Event& event)

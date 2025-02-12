@@ -7,6 +7,8 @@
 #define TYPEPLANT TYPENO + 1
 #define TYPEZOMBIE TYPEPLANT + 1
 
+#define NOSPEED sf::Vector2f(0,0)
+
 namespace sf 
 {
 	class Shape;
@@ -38,6 +40,8 @@ public:
     bool GoToPosition(int x, int y, float speed = -1.f);
     void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
 	void SetDirection(float x, float y, float speed = -1.f);
+	sf::Vector2f GetDirection();
+	float GetSpeed();
 	void SetSpeed(float speed) { mSpeed = speed; }
 	void SetTag(int tag) { mTag = tag; }
 	float GetRadius() const { return mShape.getRadius(); }
@@ -48,18 +52,28 @@ public:
 	sf::Shape* GetShape() { return &mShape; }
 
 	bool IsTag(int tag) const { return mTag == tag; }
+	//if entity collide with other
+	//this fonction call OnCollision with entity* other
     bool IsColliding(Entity* other) const;
+	//if entity collide with point
 	bool IsInside(float x, float y) const;
+	//if entity out of window more extentionLeftWindow or extentionRightWindow
+	//this fonction call OnCollision with entity* other = nullptr
+	void OutWindow(sf::Vector2f extentionLeftWindow, sf::Vector2f extentionRightWindow);
+	void OutWindow(float extentionLeftWindow, float extentionRightWindow);
 
+	//if entity is destroy
     void Destroy();
 	bool ToDestroy() const { return mToDestroy; }
 	
+	//for get id scene
 	template<typename T>
 	T* GetScene() const;
 
     Scene* GetScene() const;
 	float GetDeltaTime() const;
 
+	//for creat entity
     template<typename T>
     T* CreateEntity(float radius, const sf::Color& color);
 

@@ -12,25 +12,34 @@ void Shot::OnInitialize()
 
 void Shot::OnCollision(Entity* other)
 {
-	if (Zombie* zombie = GetScene<Garden>()->GetTypeConvert<Zombie*>(other))
+	if(other != nullptr)
 	{
-		if (zombie->GetType() != mType)
+		if (Zombie* zombie = GetScene<Garden>()->GetTypeConvert<Zombie*>(other))
 		{
-			Alive::LifeLessLess();
+			if (zombie->GetType() != mType)
+			{
+				Alive::LifeLessLess();
+			}
+		}
+		else if (Shot* shot = GetScene<Garden>()->GetTypeConvert<Shot*>(other))
+		{
+			if (shot->GetType() != mType)
+			{
+				Alive::LifeLessLess();
+			}
 		}
 	}
-	else if (Shot* shot = GetScene<Garden>()->GetTypeConvert<Shot*>(other))
+	else
 	{
-		if (shot->GetType() != mType)
-		{
-			Alive::LifeLessLess();
-		}
+		//sorti de l'ecran
+		Destroy();
 	}
 }
 
 void Shot::OnUpdate()
 {
 	Alive::OnUpdate();
+	Entity::OutWindow(1000,0);
 }
 
 void Shot::ActionDead()

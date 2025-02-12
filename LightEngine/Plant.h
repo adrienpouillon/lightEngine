@@ -1,11 +1,11 @@
 #pragma once
 #include "Entity.h"
 #include "Alive.h"
+#include "StateManager.h"
 
-class Plant :public Entity, public Alive
+class Plant :public Entity, public Alive, public StateManager
 {
 protected:
-	
 
 public:
 
