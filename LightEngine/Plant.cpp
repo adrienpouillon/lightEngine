@@ -31,6 +31,12 @@ void Plant::OnUpdate()
 {
 	Alive::OnUpdate();
 	StateManager::OnUpdate(GetDeltaTime());
+
+}
+
+void Plant::OnShoot()
+{
+	GetScene<Garden>()->InstanceShot(this);
 }
 
 void Plant::ActionDead()

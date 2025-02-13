@@ -15,6 +15,8 @@ public:
 
 	virtual void OnUpdate();
 
+	virtual void OnShoot();
+
 	virtual void ActionDead();
 
 	void SetLife(int life);

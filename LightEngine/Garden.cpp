@@ -37,7 +37,7 @@ void Garden::CreatZombie(float radius, sf::Color color, sf::Vector2f pos, bool r
 	zombie->SetPosition(pos.x, pos.y);
 	zombie->SetRigidBody(rigidBody);
 	zombie->SetLife(life);
-	zombie->Init(3, 3, 1, SHOOTINGUSE, zombie);
+	zombie->Init(0, 0, 0, WALKINGUSE, zombie);
 	zombie->SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::Red, sf::Color::Yellow);
 }
 
@@ -99,14 +99,19 @@ bool Garden::TryShot(Entity* pEntity, int x, int y)
 {
 	if (pEntity->IsInside(x, y) == false)
 		return false;
+	InstanceShot(pEntity);
+	return true;
+}
+
+void Garden::InstanceShot(Entity* itsCreator)
+{
 	int radiusShot = 25;
-	sf::Vector2f pos = pEntity->GetPosition();
-	int sizeEntity = pEntity->GetRadius();
-	int type = pEntity->GetType();
+	sf::Vector2f pos = itsCreator->GetPosition();
+	int sizeEntity = itsCreator->GetRadius();
+	int type = itsCreator->GetType();
 	if (type == TYPEZOMBIE)
 	{
 		sizeEntity = -(sizeEntity + radiusShot);
 	}
 	CreatShot(radiusShot, sf::Color::Yellow, sf::Vector2f(pos.x + sizeEntity, pos.y), false, 1, type);
-	return true;
 }

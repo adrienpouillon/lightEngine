@@ -49,6 +49,7 @@ void StateManager::Init(int capacity, int reloadTime, int shootTime, int modeUse
 		mAllState.push_back(nullptr);
 	}
 
+	mColor.resize(State::Count, sf::Color::White);
 	SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White);
 
 	mCapacity = capacity;
@@ -122,42 +123,45 @@ bool StateManager::TransitionTo(State newState)
 
 void StateManager::IsFull()
 {
-	mThis->GetShape()->setFillColor(mColor[0]);
+	mThis->GetShape()->setFillColor(mColor[State::Full]);
+	Shoot();
 }
 void StateManager::IsLoaded()
 {
-	mThis->GetShape()->setFillColor(mColor[1]);
+	mThis->GetShape()->setFillColor(mColor[State::Loaded]);
+	Shoot();
 }
 void StateManager::IsEmpty()
 {
-	mThis->GetShape()->setFillColor(mColor[2]);
+	mThis->GetShape()->setFillColor(mColor[State::Empty]);
+	Reload();
 }
 void StateManager::IsShooting()
 {
-	mThis->GetShape()->setFillColor(mColor[3]);
+	mThis->GetShape()->setFillColor(mColor[State::Shooting]);
 }
 void StateManager::IsReloading()
 {
-	mThis->GetShape()->setFillColor(mColor[4]);
+	mThis->GetShape()->setFillColor(mColor[State::Reloading]);
 }
 void StateManager::IsWalking()
 {
-	mThis->GetShape()->setFillColor(mColor[5]);
+	mThis->GetShape()->setFillColor(mColor[State::Walking]);
 }
 void StateManager::IsEating()
 {
-	mThis->GetShape()->setFillColor(mColor[6]);
+	mThis->GetShape()->setFillColor(mColor[State::Eating]);
 }
 
 void StateManager::SetAllColor(sf::Color full, sf::Color loaded, sf::Color empty, sf::Color shoot, sf::Color reload, sf::Color walk, sf::Color eat)
 {
-	mColor.push_back(full);
-	mColor.push_back(loaded);
-	mColor.push_back(empty);
-	mColor.push_back(shoot);
-	mColor.push_back(reload);
-	mColor.push_back(walk);
-	mColor.push_back(eat);
+	mColor[State::Full] = full;
+	mColor[State::Loaded] = loaded;
+	mColor[State::Empty] = empty;
+	mColor[State::Shooting] = shoot;
+	mColor[State::Reloading] = reload;
+	mColor[State::Walking] = walk;
+	mColor[State::Eating] = eat;
 }
 
 void StateManager::Shoot()

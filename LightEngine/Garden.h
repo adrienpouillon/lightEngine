@@ -27,6 +27,8 @@ public:
 
 	bool TryShot(Entity* pEntity, int x, int y);
 
+	void InstanceShot(Entity* itsCreator);
+
 	template<typename T>
 	T* GetEntity();
 
