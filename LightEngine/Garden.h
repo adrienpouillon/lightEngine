@@ -18,9 +18,9 @@ public:
 
 	void CreatShot(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life, int type, float verticalDirection);
 
-	void CreatZombie(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life);
 
-	void CreatPlant(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life);
 
 	void OnEvent(const sf::Event& event);
 
@@ -40,7 +40,29 @@ public:
 
 	bool IsAlongLineUp(Entity* itMe);
 
-	bool IsLineEmpty(Entity* itMe, float itMePos);
+	bool IsLineEmptyEnemy(int itMeType, float itMePos);
+
+	bool IsAreaEmpty(Entity* itMe, float area);
+
+	bool IsAreaEmptyUp(Entity* itMe, float area);
+
+	bool IsAreaEmptyDown(Entity* itMe, float area);
+
+	bool IsZoneEmpty(int itMeType, sf::Vector2f itMePos, float area);
+
+	bool IsEnemieInLine(float itMePos, float entityPos, int itMeType, int entityType);
+
+	bool IsAllieInLine(float itMePos, float entityPos, int itMeType, int entityType);
+
+	bool IsEmptyPlantInLine(Entity* itMe);
+
+	bool IsEmptyPlantInLineUp(Entity* itMe);
+
+	bool IsEmptyPlantInLineDown(Entity* itMe);
+
+	bool IsLineEmptyPlant(float itMePos);
+
+	bool IsPlantInLine(float itMePos, float entityPos, Entity* entity);
 
 	template<typename T>
 	T* GetEntity();

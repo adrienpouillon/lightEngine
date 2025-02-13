@@ -186,6 +186,7 @@ void StateManager::Shoot(int tag)
 			shooting->Start();
 		}
 		SetCanShoot(false);
+		SetCanReload(false);
 		AmmoLessLess();
 		OnShoot(tag);
 	}
@@ -206,7 +207,35 @@ void StateManager::Reload()
 			reloading->Start();
 		}
 		SetCanReload(false);
-		SetMaxAmmo();
+		if (mAmmo < 0)
+		{
+			SetAmmo(mCapacity + mCapacity/2);
+		}
+		else
+		{
+			SetAmmo(mCapacity);
+		}
+		
+		std::cout << "recharge de munition" << std::endl;
+	}
+	else
+	{
+		std::cout << "..." << std::endl;
+	}
+}
+
+void StateManager::SuperReload()
+{
+	//si peut recharger
+	if (TransitionTo(State::Reloading))
+	{
+		//recharger
+		if (ReloadingState* reloading = GetState<ReloadingState>())
+		{
+			reloading->Start();
+		}
+		SetCanReload(false);
+		SetAmmo(mCapacity * 2);
 		std::cout << "recharge de munition" << std::endl;
 	}
 	else

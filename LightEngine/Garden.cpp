@@ -10,11 +10,11 @@ void Garden::OnInitialize()
 {
 	mAllEntity = GameManager::Get()->GetTabEntity();
 
-	CreatPlant(50, sf::Color::Green, sf::Vector2f(COLLUMPLANT, LINEONE), false, 3);
+	CreatPlant(50, sf::Vector2f(COLLUMPLANT, LINEONE), false, 3);
 
-	CreatPlant(50, sf::Color::Green, sf::Vector2f(COLLUMPLANT, LINETWO), false, 3);
+	CreatPlant(50, sf::Vector2f(COLLUMPLANT, LINETWO), false, 3);
 
-	CreatPlant(50, sf::Color::Green, sf::Vector2f(COLLUMPLANT, LINETHREE), false, 3);
+	CreatPlant(50, sf::Vector2f(COLLUMPLANT, LINETHREE), false, 3);
 
 }
 
@@ -28,20 +28,19 @@ void Garden::CreatShot(float radius, sf::Color color, sf::Vector2f pos, bool rig
 	shot->SetDirectionShot(sf::Vector2f(pos.x, pos.y + verticalDirection*2));
 }
 
-void Garden::CreatZombie(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life)
+void Garden::CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life)
 {
-	
-	Zombie* zombie = CreateEntity<Zombie>(radius, color);
+	Zombie* zombie = CreateEntity<Zombie>(radius, sf::Color::White);
 	zombie->SetPosition(pos.x, pos.y);
 	zombie->SetRigidBody(rigidBody);
 	zombie->SetLife(life);
 	zombie->Init(0, 0.f, 0.f, 0.f, WALKINGUSE, zombie);
-	zombie->SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::Magenta, sf::Color::Yellow);
+	zombie->SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::Red, sf::Color::Yellow);
 }
 
-void Garden::CreatPlant(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life)
+void Garden::CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life)
 {
-	Plant* plant = CreateEntity<Plant>(radius, color);
+	Plant* plant = CreateEntity<Plant>(radius, sf::Color::White);
 	plant->SetPosition(pos.x, pos.y);
 	plant->SetRigidBody(rigidBody);
 	plant->SetLife(life * 100);
@@ -68,13 +67,13 @@ void Garden::OnEvent(const sf::Event& event)
 
 		if (!isExecute)
 		{
-			CreatZombie(50, sf::Color::Red, sf::Vector2f(COLLUMZOMBIE, LINEONE), true, 3);
+			CreatZombie(50, sf::Vector2f(COLLUMZOMBIE, LINEONE), true, 3);
 		}
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Middle)
 	{
-		CreatZombie(50, sf::Color::Red, sf::Vector2f(COLLUMZOMBIE, LINETWO), true, 3);
+		CreatZombie(50, sf::Vector2f(COLLUMZOMBIE, LINETWO), true, 3);
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
@@ -91,7 +90,7 @@ void Garden::OnEvent(const sf::Event& event)
 
 		if (!isExecute)
 		{
-			CreatZombie(50, sf::Color::Red, sf::Vector2f(COLLUMZOMBIE, LINETHREE), true, 3);
+			CreatZombie(50, sf::Vector2f(COLLUMZOMBIE, LINETHREE), true, 3);
 		}
 	}
 }
@@ -148,26 +147,54 @@ void Garden::InstanceShotRoc(Entity* itsCreator, float verticalDirection)
 
 bool Garden::IsAlongLine(Entity* itMe)
 {
-	return IsLineEmpty(itMe, itMe->GetPosition().y);
+	return IsLineEmptyEnemy(itMe->GetType(), itMe->GetPosition().y);
 }
 
 bool Garden::IsAlongLineUp(Entity* itMe)
 {
-	return IsLineEmpty(itMe, itMe->GetPosition().y - HEIGHTLINE);
+	return IsLineEmptyEnemy(itMe->GetType(), itMe->GetPosition().y - HEIGHTLINE);
 }
 
 bool Garden::IsAlongLineDown(Entity* itMe)
 {
-	return IsLineEmpty(itMe, itMe->GetPosition().y + HEIGHTLINE);
+	return IsLineEmptyEnemy(itMe->GetType(), itMe->GetPosition().y + HEIGHTLINE);
 }
 
-bool Garden::IsLineEmpty(Entity* itMe, float itMePos)
+bool Garden::IsLineEmptyEnemy(int itMeType, float itMePos)
 {
 	for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
 	{
-		if (itMePos == (*it)->GetPosition().y)
+		if (IsEnemieInLine(itMePos, (*it)->GetPosition().y, itMeType, (*it)->GetType()))//(itMePos.y == (*it)->GetPosition().y)(itMe->GetType() != (*it)->GetType())
 		{
-			if (itMe->GetType() != (*it)->GetType())
+			return false;
+		}
+		++it;
+	}
+	return true;
+}
+
+bool Garden::IsAreaEmpty(Entity* itMe, float area)
+{
+	return IsZoneEmpty(itMe->GetType(), itMe->GetPosition(), area);
+}
+
+bool Garden::IsAreaEmptyUp(Entity* itMe, float area)
+{
+	return IsZoneEmpty(itMe->GetType(), itMe->GetPosition() - sf::Vector2f(0, HEIGHTLINE), area);
+}
+
+bool Garden::IsAreaEmptyDown(Entity* itMe, float area)
+{
+	return IsZoneEmpty(itMe->GetType(), itMe->GetPosition() + sf::Vector2f(0,HEIGHTLINE), area);
+}
+
+bool Garden::IsZoneEmpty(int itMeType, sf::Vector2f itMePos, float area)
+{
+	for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
+	{
+		if (IsEnemieInLine(itMePos.y, (*it)->GetPosition().y, itMeType, (*it)->GetType()))//(itMePos.y == (*it)->GetPosition().y)(itMe->GetType() != (*it)->GetType())
+		{
+			if(itMePos.x + area > (*it)->GetPosition().x && itMePos.x - area < (*it)->GetPosition().x)
 			{
 				return false;
 			}
@@ -175,4 +202,68 @@ bool Garden::IsLineEmpty(Entity* itMe, float itMePos)
 		++it;
 	}
 	return true;
+}
+
+bool Garden::IsEnemieInLine(float itMePos, float entityPos, int itMeType, int entityType)
+{
+	if (itMePos == entityPos)
+	{
+		if (itMeType != entityType)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Garden::IsAllieInLine(float itMePos, float entityPos, int itMeType, int entityType)
+{
+	if (itMePos == entityPos)
+	{
+		if (itMeType == entityType)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Garden::IsEmptyPlantInLine(Entity* itMe)
+{
+	return IsLineEmptyPlant(itMe->GetPosition().y);
+}
+
+bool Garden::IsEmptyPlantInLineUp(Entity* itMe)
+{
+	return IsLineEmptyPlant(itMe->GetPosition().y - HEIGHTLINE);
+}
+
+bool Garden::IsEmptyPlantInLineDown(Entity* itMe)
+{
+	return IsLineEmptyPlant(itMe->GetPosition().y + HEIGHTLINE);
+}
+
+bool Garden::IsLineEmptyPlant(float itMePos)
+{
+	for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
+	{
+		if (IsPlantInLine(itMePos, (*it)->GetPosition().y, *it))
+		{
+			return false;
+		}
+		++it;
+	}
+	return true;
+}
+
+bool Garden::IsPlantInLine(float itMePos, float entityPos, Entity* entity)
+{
+	if (itMePos == entityPos)
+	{
+		if (GetTypeConvert<Plant*>(entity))
+		{
+			return true;
+		}
+	}
+	return false;
 }

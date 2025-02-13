@@ -53,7 +53,7 @@ protected:
 	State mState;
 
 	int mTransition[StateCount][StateCount] =
-	{
+	{//a ajouter ... et duplication
 	//	Full,Loaded,Empty,Shooting,Reloading,Walking,Eating
 		{0,		0,		0,		1,		0,		1,		1 },//Full
 		{0,		0,		0,		1,		1,		1,		1 },//Loaded
@@ -88,6 +88,8 @@ public:
 	void Shoot(int tag);
 
 	void Reload();
+
+	void SuperReload();
 
 	virtual void OnShoot(int tag);
 
