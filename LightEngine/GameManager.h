@@ -59,6 +59,7 @@ public:
 	float GetDeltaTime() const { return mDeltaTime; }
 	Scene* GetScene() const { return mpScene; }
 	sf::Font& GetFont() { return mFont; };
+	std::list<Entity*>* GetTabEntity() { return &mEntities; }
 
 	sf::Vector2i GetWindowSize();
 

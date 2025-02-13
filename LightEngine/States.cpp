@@ -1,4 +1,5 @@
 #include "States.h"
+#include <iostream>
 
 States::States(StateManager* stateManager)
 {
@@ -9,51 +10,81 @@ States::States(StateManager* stateManager)
 
 
 
-FullState::FullState(StateManager* stateManager) : States(stateManager)
+FullState::FullState(float idleTime, StateManager* stateManager) : States(stateManager), mIdleTime(idleTime), mIdleProgress(idleTime)
 {
 }
 
 void FullState::Start()
 {
+	SetTimeProgress(mIdleTime);
 }
 
 void FullState::Update(float deltaTime)
 {
+	mIdleProgress -= deltaTime;
+	if (mIdleProgress < 0.f)
+	{
+		mStateManager->SetCanShoot(true);
+	}
+}
 
+void FullState::SetTimeProgress(float idleProgress)
+{
+	mIdleProgress = idleProgress;
 }
 
 
 
 
-LoadedState::LoadedState(StateManager* stateManager) : States(stateManager)
+LoadedState::LoadedState(float idleTime, StateManager* stateManager) : States(stateManager), mIdleTime(idleTime), mIdleProgress(idleTime)
 {
 }
 
 void LoadedState::Start()
 {
+	SetTimeProgress(mIdleTime);
 }
 
 void LoadedState::Update(float deltaTime)
 {
+	mIdleProgress -= deltaTime;
+	if (mIdleProgress < 0.f)
+	{
+		mStateManager->SetCanShoot(true);
+		mStateManager->SetCanReload(true);
+	}
+}
 
+void LoadedState::SetTimeProgress(float idleProgress)
+{
+	mIdleProgress = idleProgress;
 }
 
 
 
 
-EmptyState::EmptyState(StateManager* stateManager) : States(stateManager)
+EmptyState::EmptyState(float idleTime, StateManager* stateManager) : States(stateManager), mIdleTime(idleTime), mIdleProgress(idleTime)
 {
 }
 
 void EmptyState::Start()
 {
+	SetTimeProgress(mIdleTime);
 }
 
 void EmptyState::Update(float deltaTime)
 {
-
+	mIdleProgress -= deltaTime;
+	if (mIdleProgress < 0.f)
+	{
+		mStateManager->SetCanReload(true);
+	}
 }
 
+void EmptyState::SetTimeProgress(float idleProgress)
+{
+	mIdleProgress = idleProgress;
+}
 
 
 
@@ -156,7 +187,7 @@ void WalkingState::Update(float deltaTime)
 		if (mStateManager->TransitionTo(mStateManager->State::Eating))
 		{
 			Entity* entity = mStateManager->GetThis();
-			entity->GoToDirection(0, 0, 0.f);
+			entity->SetSpeed(0);
 			if (EatingState* eating = mStateManager->GetState<EatingState>())
 			{
 				eating->Start();

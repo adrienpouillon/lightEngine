@@ -15,11 +15,15 @@ public:
 
 	virtual void OnUpdate();
 
+	void InsertInLine();
+
 	virtual void ActionDead();
 
 	void SetLife(int life);
 
 	void SetType(int type);
+
+	void SetDirectionShot(sf::Vector2f pos);
 
 	virtual int GetType();
 

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 
+
 #define NOUSE 0 
 #define SHOOTINGUSE NOUSE + 1
 #define WALKINGUSE SHOOTINGUSE + 1
@@ -37,14 +38,19 @@ public:
 protected:
 	int mAmmo;
 	int mCapacity;
+	bool mCanShoot;
+	bool mCanReload;
+
+	bool mIsCollide;
+
 	std::vector<sf::Color> mColor;
 	Entity* mThis;
-	bool mIsCollide;
+	
 
 	std::vector<States*> mAllState;
 	/*const char** mAllState;*/
 
-	State mState = State::Full;
+	State mState;
 
 	int mTransition[StateCount][StateCount] =
 	{
@@ -61,7 +67,7 @@ protected:
 public:
 	StateManager();
 
-	void Init(int capacity, int reloadTime, int shootTime, int modeUse, Entity* id);
+	void Init(int capacity, float reloadTime, float shootTime, float idletime, int modeUse, Entity* id);
 
 	void OnUpdate(float deltaTime);
 
@@ -79,11 +85,11 @@ public:
 
 	void SetAllColor(sf::Color full, sf::Color loaded, sf::Color empty, sf::Color shoot, sf::Color reload, sf::Color walk, sf::Color eat);
 
-	void Shoot();
+	void Shoot(int tag);
 
 	void Reload();
 
-	virtual void OnShoot();
+	virtual void OnShoot(int tag);
 
 	void SetIsCollide(bool isCollide);
 
@@ -102,7 +108,13 @@ public:
 	template<typename T>
 	T* GetState();
 
-	void Destroy();
+	void SetCanShoot(bool canShoot);
+
+	bool GetCanShoot();
+
+	void SetCanReload(bool canReload);
+
+	bool GetCanReload();
 
 	~StateManager();
 };

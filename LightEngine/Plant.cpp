@@ -7,8 +7,9 @@
 void Plant::OnInitialize()
 {
 	Alive::OnInitialize(5000);
-	StateManager::Init(3, 3, 1, SHOOTINGUSE, this);
+	StateManager::Init(3, 3.f, 1.f, 1.f, SHOOTINGUSE, this);
 	SetAllColor(sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green);
+	mState = State::Full;
 }
 
 void Plant::OnCollision(Entity* other)
@@ -32,16 +33,81 @@ void Plant::OnUpdate()
 	Alive::OnUpdate();
 	StateManager::OnUpdate(GetDeltaTime());
 
+	IaAction();
 }
 
-void Plant::OnShoot()
+void Plant::IaAction()
 {
-	GetScene<Garden>()->InstanceShot(this);
+	if (GetScene<Garden>()->IsAlongLine(this) == false)
+	{
+		if (GetCanShoot())
+		{
+			Shoot(TAGSHOOT1);
+		}
+		else if (GetCanReload())
+		{
+			Reload();
+		}
+	}
+	else
+	{
+		if (GetScene<Garden>()->IsAlongLineUp(this) == false)
+		{
+			if (GetCanShoot())
+			{
+				Shoot(TAGSHOOT3);
+			}
+			else if (GetCanReload())
+			{
+				Reload();
+			}
+		}
+		else if (GetScene<Garden>()->IsAlongLineDown(this) == false)
+		{
+			if (GetCanShoot())
+			{
+				Shoot(TAGSHOOT5);
+			}
+			else if (GetCanReload())
+			{
+				Reload();
+			}
+		}
+		else if (GetCanReload())
+		{
+			Reload();
+		}
+	}
+}
+
+void Plant::OnShoot(int tag)
+{
+	switch(tag)
+	{
+	case TAGSHOOT1:
+		GetScene<Garden>()->InstanceShot(this, MYLINE);
+		break;
+	case TAGSHOOT2:
+		GetScene<Garden>()->InstanceShotRoc(this, MYLINE);
+		break;
+	case TAGSHOOT3:
+		GetScene<Garden>()->InstanceShot(this, UPLINE);
+		break;
+	case TAGSHOOT4:
+		GetScene<Garden>()->InstanceShotRoc(this, UPLINE);
+		break;
+	case TAGSHOOT5:
+		GetScene<Garden>()->InstanceShot(this, DOWNLINE);
+		break;
+	case TAGSHOOT6:
+		GetScene<Garden>()->InstanceShotRoc(this, DOWNLINE);
+		break;
+	}
+	
 }
 
 void Plant::ActionDead()
 {
-	StateManager::Destroy();
 	Entity::Destroy();
 }
 

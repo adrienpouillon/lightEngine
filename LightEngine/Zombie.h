@@ -6,7 +6,7 @@
 class Zombie :public Entity, public Alive, public StateManager
 {
 protected:
-
+	virtual ~Zombie() {};
 
 public:
 

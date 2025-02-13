@@ -5,9 +5,10 @@
 void Shot::OnInitialize()
 {
 	Alive::OnInitialize(1);
-	sf::Vector2f pos = GetPosition();
-	Entity::GoToDirection(pos.x + 1, pos.y, 200.f);
-	mType = TYPEPLANT;
+	SetType(TYPEPLANT);
+	//sf::Vector2f pos = GetPosition();
+	//Entity::GoToDirection(pos.x + 1, pos.y, 200.f);
+	//mType = TYPEPLANT;
 }
 
 void Shot::OnCollision(Entity* other)
@@ -40,6 +41,32 @@ void Shot::OnUpdate()
 {
 	Alive::OnUpdate();
 	Entity::OutWindow(1000,0);
+	InsertInLine();
+}
+
+void Shot::InsertInLine()
+{
+	sf::Vector2f pos = GetPosition();
+	sf::Vector2f direction = GetDirection();
+	if(direction != sf::Vector2f(pos.x - 1, pos.y) || direction != sf::Vector2f(pos.x + 1, pos.y))
+	{
+		float moreLess = 5.f;
+		if (pos.y - moreLess < LINEONE && pos.y + moreLess > LINEONE)
+		{
+			SetPosition(GetPosition().x, LINEONE);
+			SetDirectionShot(GetPosition());
+		}
+		if (pos.y - moreLess < LINETWO && pos.y + moreLess > LINETWO)
+		{
+			SetPosition(GetPosition().x, LINETWO);
+			SetDirectionShot(GetPosition());
+		}
+		if (pos.y - moreLess < LINETHREE && pos.y + moreLess > LINETHREE)
+		{
+			SetPosition(GetPosition().x, LINETHREE);
+			SetDirectionShot(GetPosition());
+		}
+	}
 }
 
 void Shot::ActionDead()
@@ -56,14 +83,17 @@ void Shot::SetLife(int life)
 void Shot::SetType(int type)
 {
 	mType = type;
+	SetDirectionShot(GetPosition());
+}
+
+void Shot::SetDirectionShot(sf::Vector2f pos)
+{
 	if (mType == TYPEPLANT)
 	{
-		sf::Vector2f pos = GetPosition();
 		Entity::GoToDirection(pos.x + 1, pos.y, 200.f);
 	}
 	else if (mType == TYPEZOMBIE)
 	{
-		sf::Vector2f pos = GetPosition();
 		Entity::GoToDirection(pos.x - 1, pos.y, 200.f);
 	}
 }

@@ -18,13 +18,16 @@ public:
 class FullState :public States
 {
 protected:
-
+	float mIdleTime;
+	float mIdleProgress;
 public:
-	FullState(StateManager* stateManager);
+	FullState(float idleTime, StateManager* stateManager);
 
 	virtual void Start();
 
 	virtual void Update(float deltaTime);
+
+	void SetTimeProgress(float idleProgress);
 };
 
 
@@ -32,13 +35,16 @@ public:
 class LoadedState :public States
 {
 protected:
-
+	float mIdleTime;
+	float mIdleProgress;
 public:
-	LoadedState(StateManager* stateManager);
+	LoadedState(float idleTime, StateManager* stateManager);
 
 	virtual void Start();
 
 	virtual void Update(float deltaTime);
+
+	void SetTimeProgress(float idleProgress);
 };
 
 
@@ -46,13 +52,17 @@ public:
 class EmptyState :public States
 {
 protected:
-
+	float mIdleTime;
+	float mIdleProgress;
 public:
-	EmptyState(StateManager* stateManager);
+	EmptyState(float idleTime, StateManager* stateManager);
 
 	virtual void Start();
 
 	virtual void Update(float deltaTime);
+
+	void SetTimeProgress(float idleProgress);
+
 };
 
 
