@@ -39,10 +39,8 @@ void Plant::OnUpdate()
 void Plant::IaAction()
 {
 	Garden* garden = GetScene<Garden>();
-	if (garden->IsAlongLine(this) == false){
-		//il y a un enemie
-		if (!garden->IsAreaEmpty(this, GetRadius() * 5)){
-			//si enemie proche
+	if (garden->IsAlongLine(this) == false){/*il y a un enemie*/
+		if (!garden->IsAreaEmpty(this, GetRadius() * 5)){/*si enemie proche*/
 			if (GetCanShoot()){/*on peut tirer*/Shoot(TAGSHOOT2);}
 			else if (GetCanReload()){/*si peut super charger*/SuperReload();}
 		}else{
@@ -52,11 +50,12 @@ void Plant::IaAction()
 		}
 	}
 	else
-	{//il y a personne sur la ligne
+	{//il y a personne sur la ligne notre ligne
 		bool enemieUp = !garden->IsAlongLineUp(this);
 		bool enemieDown = !garden->IsAlongLineDown(this);
 		if (enemieUp && enemieDown){/*il y a un enemie sur la ligne du dessus et du dessous*/
-	//if (garden->IsEmptyPlantInLineUp(this)) { /*il y a un enemie sur la ligne du dessus et du dessous et pas de plante*/ } 
+		//if (garden->IsEmptyPlantInLineUp(this)) { /*il y a un enemie sur la ligne du dessus mais pas de plante*/ } 
+			//if (garden->IsEmptyPlantInLineDown(this)) { /*il y a un enemie sur la ligne du dessous mais pas de plante*/ }
 			if (!garden->IsAreaEmptyUp(this, GetRadius() * 5)){/*il y a un enemie sur la ligne du dessus proche*/
 				if (!garden->IsAreaEmptyDown(this, GetRadius() * 5)){/*il y a un enemie sur la ligne du dessous proche donc tuer un max enemie sur la ligne du dessus ou dessous*/
 					if (GetCanShoot()){/*on peut tirer*/
@@ -81,9 +80,11 @@ void Plant::IaAction()
 		}
 		else if (enemieUp)
 		{/*il y a un enemie sur la ligne du dessus*/
+			//if (garden->IsEmptyPlantInLineUp(this)) { /*il y a un enemie sur la ligne du dessus mais pas de plante*/ }
 			if (GetCanShoot()){/*on peut tirer*/Shoot(TAGSHOOT3);}
 			else if (GetCanReload()){/*on peut recharger*/Reload();}
 		}else if (enemieDown){/*il y a un enemie sur la ligne du dessous*/
+			//if (garden->IsEmptyPlantInLineDown(this)) { /*il y a un enemie sur la ligne du dessous mais pas de plante*/ }
 			if (GetCanShoot()){/*on peut tirer*/Shoot(TAGSHOOT5);}
 			else if (GetCanReload()){/*on peut recharger*/Reload();}
 		}else if (GetCanReload()){/*on peut super charger*/SuperReload();}
