@@ -67,7 +67,7 @@ protected:
 public:
 	StateManager();
 
-	void Init(int capacity, float reloadTime, float shootTime, float idletime, int modeUse, Entity* id);
+	void Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, Entity* id);
 
 	void OnUpdate(float deltaTime);
 

@@ -6,7 +6,7 @@ StateManager::StateManager()
 {
 }
 
-void StateManager::Init(int capacity, float reloadTime, float shootTime, float idletime, int modeUse, Entity* id)
+void StateManager::Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, Entity* id)
 {
 	//mode use
 	//modeUse = NOUSE = 0 -> rien
@@ -42,7 +42,7 @@ void StateManager::Init(int capacity, float reloadTime, float shootTime, float i
 
 	if (modeUse == WALKINGUSE || modeUse == SHOOTTINGWALKINGUSE)
 	{
-		mAllState.push_back(new WalkingState(this));
+		mAllState.push_back(new WalkingState(speed, this));
 		mAllState.push_back(new EatingState(this));
 	}
 	else

@@ -108,9 +108,9 @@ public:
 class WalkingState :public States
 {
 protected:
-
+	float mSpeed;
 public:
-	WalkingState(StateManager* stateManager);
+	WalkingState(float speed, StateManager* stateManager);
 
 	virtual void Start();
 

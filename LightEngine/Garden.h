@@ -9,20 +9,30 @@
 #define LINETWO HEIGHTLINE + LINEONE
 #define LINETHREE HEIGHTLINE + LINETWO
 
+#define MODEZOMBIE 0
+#define MODEPLANT MODEZOMBIE + 1
+
+#define MAXMODECREATOR MODEPLANT + 1
+
 class Garden :public Scene
 {
 protected:
 	std::list<Entity*>* mAllEntity;
+	int mModeCreator;
 public:
 	void OnInitialize();
 
 	void CreatShot(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life, int type, float verticalDirection);
 
-	void CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
 
 	void CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life);
 
 	void OnEvent(const sf::Event& event);
+
+	void OnEventMouse(const sf::Event& event);
+
+	void OnEventKeyboard(const sf::Event& event);
 
 	void OnUpdate();
 
@@ -48,7 +58,7 @@ public:
 
 	bool IsAreaEmptyDown(Entity* itMe, float area);
 
-	bool IsZoneEmpty(int itMeType, sf::Vector2f itMePos, float area);
+	bool IsZoneEmptyEnemy(int itMeType, sf::Vector2f itMePos, float area);
 
 	bool IsEnemieInLine(float itMePos, float entityPos, int itMeType, int entityType);
 
@@ -63,6 +73,10 @@ public:
 	bool IsLineEmptyPlant(float itMePos);
 
 	bool IsPlantInLine(float itMePos, float entityPos, Entity* entity);
+
+	bool IsZoneEmptyPlant(sf::Vector2f itMePos, float area);
+
+	void CreatNewPlant(float radius, int line, bool rigidBody, int life);
 
 	template<typename T>
 	T* GetEntity();

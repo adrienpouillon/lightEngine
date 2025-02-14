@@ -167,7 +167,7 @@ void ReloadingState::SetReloadProgress(float reloadProgress)
 
 
 
-WalkingState::WalkingState(StateManager* stateManager) : States(stateManager)
+WalkingState::WalkingState(float speed, StateManager* stateManager) : States(stateManager), mSpeed(speed)
 {
 
 }
@@ -175,9 +175,7 @@ WalkingState::WalkingState(StateManager* stateManager) : States(stateManager)
 void WalkingState::Start()
 {
 	Entity* entity = mStateManager->GetThis();
-	sf::Vector2f direction = entity->GetDirection();
-	float speed = entity->GetSpeed();
-	entity->GoToDirection(direction.x, direction.y, speed);
+	entity->SetSpeed(mSpeed);
 }
 
 void WalkingState::Update(float deltaTime)
@@ -187,7 +185,7 @@ void WalkingState::Update(float deltaTime)
 		if (mStateManager->TransitionTo(mStateManager->State::Eating))
 		{
 			Entity* entity = mStateManager->GetThis();
-			entity->SetSpeed(0);
+			entity->SetSpeed(0.f);
 			if (EatingState* eating = mStateManager->GetState<EatingState>())
 			{
 				eating->Start();

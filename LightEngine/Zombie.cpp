@@ -6,9 +6,10 @@
 void Zombie::OnInitialize()
 {
 	Alive::OnInitialize(3);
+	float speed = 20.f;
 	sf::Vector2f pos = GetPosition();
-	Entity::GoToDirection(pos.x - 1, pos.y, 20.f);
-	StateManager::Init(3, 0.f, 0.f, 0.f, WALKINGUSE, this);
+	Entity::GoToDirection(pos.x - 1, pos.y, speed);
+	StateManager::Init(3, speed, 0.f, 0.f, 0.f, WALKINGUSE, this);
 	SetAllColor(sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red);
 	mState = State::Walking;
 }
@@ -26,7 +27,6 @@ void Zombie::OnCollision(Entity* other)
 	{
 		SetIsCollide(true);
 	}
-	
 }
 
 void Zombie::OnUpdate()
