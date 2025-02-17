@@ -199,7 +199,7 @@ void Plant::IaAction()
 					else
 					{
 						/*si enemie pas proche sur la ligne du dessous*/
-						if (!garden->IsAlongLineUp(this))
+						if (!garden->IsAlongLineDown(this))
 						{
 							/*si enemie sur la ligne du dessous*/
 							if (GetCanShoot()) {/*on peut tirer*/

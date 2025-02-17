@@ -55,6 +55,9 @@
     <ClCompile Include="States.cpp">
       <Filter>PVZ</Filter>
     </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -97,6 +100,9 @@
       <Filter>PVZ</Filter>
     </ClInclude>
     <ClInclude Include="States.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
       <Filter>PVZ</Filter>
     </ClInclude>
   </ItemGroup>

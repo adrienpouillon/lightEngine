@@ -1,9 +1,11 @@
 #pragma once
 #include "Scene.h"
+#include "Mouse.h"
 
+#define ENTITYRADIUS 50 
 
-#define COLLUMPLANT 100
-#define COLLUMZOMBIE 1200
+#define COLLUMPLANT ENTITYRADIUS*2
+#define COLLUMZOMBIE 1350
 #define HEIGHTLINE 250
 #define LINEONE 100
 #define LINETWO HEIGHTLINE + LINEONE
@@ -19,6 +21,10 @@ class Garden :public Scene
 protected:
 	std::list<Entity*>* mAllEntity;
 	int mModeCreator;
+	sf::Vector2f mMousePos;
+	Mouse* mMouse;
+	int mZombiePass;
+	int mZombieDestroy;
 public:
 	void OnInitialize();
 
@@ -36,9 +42,9 @@ public:
 
 	void OnUpdate();
 
-	bool TryShot(Entity* pEntity, int x, int y);
+	bool TryShot(Entity* pEntity, float x, float y);
 
-	bool TryShotRoc(Entity* pEntity, int x, int y);
+	bool TryShotRoc(Entity* pEntity, float x, float y);
 
 	void InstanceShot(Entity* itsCreator, float verticalDirection);
 
@@ -76,7 +82,7 @@ public:
 
 	bool IsZoneEmptyPlant(sf::Vector2f itMePos, float area);
 
-	void CreatNewPlant(float radius, int line, bool rigidBody, int life);
+	void CreatNewPlant(float radius, bool rigidBody, int life, int line);
 
 	template<typename T>
 	T* GetEntity();
@@ -92,6 +98,22 @@ public:
 
 	template<typename T, typename A>
 	std::vector<T*> GetAllTypeConvert(std::list<A*> tabTypeA);
+
+	void SetMousePosition(sf::Vector2f mousePos);
+
+	sf::Vector2f GetMousePosition();
+
+	void SetModeCreator(int modeCreator);
+
+	int GetModeCreator();
+
+	void IncreaseZombiePass();
+
+	int GetZombiePass();
+
+	void IncreaseZombieDestroy();
+
+	int GetZombieDestroy();
 
 };
 

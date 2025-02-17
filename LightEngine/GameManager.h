@@ -63,6 +63,10 @@ public:
 
 	sf::Vector2i GetWindowSize();
 
+	sf::Color GetClearColor();
+
+	void SetClearColor(sf::Color Color);
+
 	friend Debug;
 	friend Scene;
 };

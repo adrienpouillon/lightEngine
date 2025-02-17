@@ -9,14 +9,27 @@
 #include <cstdlib>
 #include <crtdbg.h>
 
+void CreatSampleScene(GameManager* pInstance);
+void CreatGardenScene(GameManager* pInstance);
+
 int main() 
 {
     GameManager* pInstance = GameManager::Get();
-
-	pInstance->CreateWindow(1280, 720, "SampleScene", 60, sf::Color::Black);
 	
-	//pInstance->LaunchScene<SampleScene>();
-	pInstance->LaunchScene<Garden>();
+	//CreatSampleScene(pInstance);
+	CreatGardenScene(pInstance);
 
 	return 0;
+}
+
+void CreatSampleScene(GameManager* pInstance)
+{
+	pInstance->CreateWindow(1920, 1080, "Agare.io");
+	pInstance->LaunchScene<SampleScene>();
+}
+
+void CreatGardenScene(GameManager* pInstance)
+{
+	pInstance->CreateWindow(1280, 720, "Plant Vs Zombie");
+	pInstance->LaunchScene<Garden>();
 }

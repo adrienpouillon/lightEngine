@@ -26,6 +26,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Garden.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Plant.cpp" />
     <ClCompile Include="SampleScene.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Garden.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="Plant.h" />
     <ClInclude Include="SampleScene.h" />
     <ClInclude Include="Scene.h" />

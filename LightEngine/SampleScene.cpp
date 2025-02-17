@@ -6,13 +6,16 @@
 
 void SampleScene::OnInitialize()
 {
+	mTimeBackGround = 50.f;
+	mTimeBackGroundProgress = mTimeBackGround;
+
 	CreatDummyEntity(100, sf::Color::Red, sf::Vector2f(100,100), true);
 
-	CreatDummyEntity(50, sf::Color::Green, sf::Vector2f(500, 500), true);
+	CreatDummyEntity(50, sf::Color::Red, sf::Vector2f(800, 500), true);
 
-	CreatDummyEntity(75, sf::Color::Blue, sf::Vector2f(1000, 300), true);
+	CreatDummyEntity(75, sf::Color::Blue, sf::Vector2f(1500, 300), true);
 
-	CreatDummyEntity(25, sf::Color::Magenta, sf::Vector2f(200, 700), true);
+	CreatDummyEntity(25, sf::Color::Magenta, sf::Vector2f(200, 900), true);
 
 	pEntitySelected = nullptr;
 }
@@ -57,13 +60,16 @@ void SampleScene::TrySetSelectedEntity(DummyEntity* pEntity, int x, int y)
 
 void SampleScene::OnUpdate()
 {
-	//for (int i = 0; i < mAllEntity.size(); i++)
-	//{
-	//	mAllEntity[i]->UpdateEntity();
-	//}
 	if(pEntitySelected != nullptr)
 	{
 		sf::Vector2f position = pEntitySelected->GetPosition();
 		Debug::DrawCircle(position.x, position.y, 3, sf::Color::Blue);
+	}
+
+	mTimeBackGroundProgress -= GetDeltaTime();
+	if (mTimeBackGroundProgress < 0.f)
+	{
+		GameManager::Get()->SetClearColor(ChooseColor(GenerateRandomNumber(WHITE, BLACK)));
+		mTimeBackGroundProgress = mTimeBackGround;
 	}
 }

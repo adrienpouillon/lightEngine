@@ -8,7 +8,7 @@ void Zombie::OnInitialize()
 	Alive::OnInitialize(3);
 	float speed = 20.f;
 	sf::Vector2f pos = GetPosition();
-	Entity::GoToDirection(pos.x - 1, pos.y, speed);
+	Entity::GoToDirection((int)pos.x - 1, (int)pos.y, speed);
 	StateManager::Init(3, speed, 0.f, 0.f, 0.f, WALKINGUSE, this);
 	SetAllColor(sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red, sf::Color::Red);
 	mState = State::Walking;
@@ -16,16 +16,24 @@ void Zombie::OnInitialize()
 
 void Zombie::OnCollision(Entity* other)
 {
-	if (Shot* shot = GetScene<Garden>()->GetTypeConvert<Shot*>(other))
+	if (other != nullptr)
 	{
-		if (shot->GetType() == TYPEPLANT)
+		if (Shot* shot = GetScene<Garden>()->GetTypeConvert<Shot*>(other))
 		{
-			Alive::LifeLessLess();
+			if (shot->GetType() == TYPEPLANT)
+			{
+				Alive::LifeLessLess();
+			}
+		}
+		if (Plant* plant = GetScene<Garden>()->GetTypeConvert<Plant*>(other))
+		{
+			SetIsCollide(true);
 		}
 	}
-	if (Plant* plant = GetScene<Garden>()->GetTypeConvert<Plant*>(other))
+	else
 	{
-		SetIsCollide(true);
+		Destroy();
+		GetScene<Garden>()->IncreaseZombiePass();
 	}
 }
 
@@ -33,10 +41,13 @@ void Zombie::OnUpdate()
 {
 	Alive::OnUpdate();
 	StateManager::OnUpdate(GetDeltaTime());
+	float zombieWidth = mShape.getRadius() * 2.f;
+	Entity::OutWindow(zombieWidth, zombieWidth * 10.f);
 }
 
 void Zombie::ActionDead()
 {
+	GetScene<Garden>()->IncreaseZombieDestroy();
 	Entity::Destroy();
 }
 

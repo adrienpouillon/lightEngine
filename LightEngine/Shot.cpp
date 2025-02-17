@@ -40,7 +40,8 @@ void Shot::OnCollision(Entity* other)
 void Shot::OnUpdate()
 {
 	Alive::OnUpdate();
-	Entity::OutWindow(1000,0);
+	float ShotWidth = mShape.getRadius() * 2.f;
+	Entity::OutWindow(ShotWidth * 10.f, ShotWidth * 10.f);
 	InsertInLine();
 }
 
@@ -90,11 +91,11 @@ void Shot::SetDirectionShot(sf::Vector2f pos)
 {
 	if (mType == TYPEPLANT)
 	{
-		Entity::GoToDirection(pos.x + 1, pos.y, 200.f);
+		Entity::GoToDirection((int)pos.x + 1, (int)pos.y, 200.f);
 	}
 	else if (mType == TYPEZOMBIE)
 	{
-		Entity::GoToDirection(pos.x - 1, pos.y, 200.f);
+		Entity::GoToDirection((int)pos.x - 1, (int)pos.y, 200.f);
 	}
 }
 

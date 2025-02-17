@@ -10,12 +10,16 @@ void Garden::OnInitialize()
 {
 	mAllEntity = GameManager::Get()->GetTabEntity();
 	mModeCreator = MODEZOMBIE;
+	mZombiePass = 0;
+	mZombieDestroy = 0;
 
-	CreatPlant(50, sf::Vector2f(COLLUMPLANT, LINEONE), false, 3);
+	mMouse = CreateEntity<Mouse>(5, sf::Color::Red);
 
-	CreatPlant(50, sf::Vector2f(COLLUMPLANT, LINETWO), false, 3);
+	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINEONE), false, 3);
 
-	CreatPlant(50, sf::Vector2f(COLLUMPLANT, LINETHREE), false, 3);
+	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINETWO), false, 3);
+
+	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINETHREE), false, 3);
 
 }
 
@@ -31,7 +35,7 @@ void Garden::CreatShot(float radius, sf::Color color, sf::Vector2f pos, bool rig
 
 void Garden::CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed)
 {
-	Zombie* zombie = CreateEntity<Zombie>(radius, sf::Color::White);
+	Zombie* zombie = CreateEntity<Zombie>(radius, sf::Color::Red);
 	zombie->SetPosition(pos.x, pos.y);
 	zombie->SetRigidBody(rigidBody);
 	zombie->SetLife(life);
@@ -41,7 +45,7 @@ void Garden::CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int lif
 
 void Garden::CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life)
 {
-	Plant* plant = CreateEntity<Plant>(radius, sf::Color::White);
+	Plant* plant = CreateEntity<Plant>(radius, sf::Color::Green);
 	plant->SetPosition(pos.x, pos.y);
 	plant->SetRigidBody(rigidBody);
 	plant->SetLife(life * 100);
@@ -51,11 +55,12 @@ void Garden::CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life
 
 void Garden::OnEvent(const sf::Event& event)
 {
+	SetMousePosition(sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
 	if (event.type == sf::Event::EventType::MouseButtonPressed)
 	{
 		OnEventMouse(event);
 	}
-	if (event.type != sf::Event::EventType::KeyPressed)
+	if (event.type == sf::Event::EventType::KeyPressed)
 	{
 		OnEventKeyboard(event);
 	}
@@ -68,7 +73,7 @@ void Garden::OnEventMouse(const sf::Event& event)
 		bool isExecute = false;
 		for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
 		{
-			if (TryShot(*it, event.mouseButton.x, event.mouseButton.y))
+			if (TryShot(*it, (float)event.mouseButton.x, (float)event.mouseButton.y))
 			{
 				isExecute = true;
 			}
@@ -79,11 +84,11 @@ void Garden::OnEventMouse(const sf::Event& event)
 		{
 			if (mModeCreator == MODEZOMBIE)
 			{
-				CreatZombie(50, sf::Vector2f(COLLUMZOMBIE, LINEONE), true, 3, 20.f);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, LINEONE), true, 3, 20.f);
 			}
 			else if (mModeCreator == MODEPLANT)
 			{
-				CreatNewPlant(50, LINEONE, true, 3);
+				CreatNewPlant(ENTITYRADIUS, false, 3, LINEONE);
 			}
 		}
 	}
@@ -92,11 +97,11 @@ void Garden::OnEventMouse(const sf::Event& event)
 	{
 		if (mModeCreator == MODEZOMBIE)
 		{
-			CreatZombie(50, sf::Vector2f(COLLUMZOMBIE, LINETWO), true, 3, 20.f);
+			CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, LINETWO), true, 3, 20.f);
 		}
 		else if (mModeCreator == MODEPLANT)
 		{
-
+			CreatNewPlant(ENTITYRADIUS, false, 3, LINETWO);
 		}
 	}
 
@@ -105,7 +110,7 @@ void Garden::OnEventMouse(const sf::Event& event)
 		bool isExecute = false;
 		for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
 		{
-			if (TryShotRoc(*it, event.mouseButton.x, event.mouseButton.y))
+			if (TryShotRoc(*it, (float)event.mouseButton.x, (float)event.mouseButton.y))
 			{
 				isExecute = true;
 			}
@@ -116,11 +121,11 @@ void Garden::OnEventMouse(const sf::Event& event)
 		{
 			if (mModeCreator == MODEZOMBIE)
 			{
-				CreatZombie(50, sf::Vector2f(COLLUMZOMBIE, LINETHREE), true, 3, 20.f);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, LINETHREE), true, 3, 20.f);
 			}
 			else if (mModeCreator == MODEPLANT)
 			{
-
+				CreatNewPlant(ENTITYRADIUS, false, 3, LINETHREE);
 			}
 		}
 	}
@@ -128,47 +133,54 @@ void Garden::OnEventMouse(const sf::Event& event)
 
 void Garden::OnEventKeyboard(const sf::Event& event)
 {
-	if (event.KeyPressed == sf::Keyboard::Space)
+	if (event.key.code == sf::Keyboard::Space)
 	{
-		mModeCreator++;
+		SetModeCreator(mModeCreator + 1);
 		if (mModeCreator < MAXMODECREATOR)
 		{
 			return;
 		}
-		mModeCreator = 0;
+		SetModeCreator(0);
 	}
 }
 
-
 void Garden::OnUpdate()
 {
-	//for (int i = 0; i < mAllEntity.size(); i++)
-	//{
-	//	mAllEntity[i]->UpdateEntity();
-	//}
+	sf::Vector2i sizeWindow = GameManager::Get()->GetWindowSize();
+	std::string stringPass = std::to_string(mZombiePass) + " Zombie qui a passe' vos defenses";
+	Debug::DrawText((float)sizeWindow.x / 5.f, 0.f, stringPass, sf::Color::Red);
+
+	std::string stringDestroy = std::to_string(mZombieDestroy) + " Zombie tue'";
+	Debug::DrawText(((float)(sizeWindow.x * 3)) / 4.f, 0.f, stringDestroy, sf::Color::Green);
 }
 
-bool Garden::TryShot(Entity* pEntity, int x, int y)
+bool Garden::TryShot(Entity* pEntity, float x, float y)
 {
+	if (pEntity == mMouse)
+		return false;
 	if (pEntity->IsInside(x, y) == false)
 		return false;
+
 	InstanceShot(pEntity, 0.f);
 	return true;
 }
 
-bool Garden::TryShotRoc(Entity* pEntity, int x, int y)
+bool Garden::TryShotRoc(Entity* pEntity, float x, float y)
 {
+	if (pEntity == mMouse)
+		return false;
 	if (pEntity->IsInside(x, y) == false)
 		return false;
+
 	InstanceShotRoc(pEntity, 0.f);
 	return true;
 }
 
 void Garden::InstanceShot(Entity* itsCreator, float verticalDirection)
 {
-	int radiusShot = 25;
+	float radiusShot = 25;
 	sf::Vector2f pos = itsCreator->GetPosition();
-	int sizeEntity = itsCreator->GetRadius();
+	float sizeEntity = itsCreator->GetRadius();
 	int type = itsCreator->GetType();
 	if (type == TYPEZOMBIE)
 	{
@@ -179,9 +191,9 @@ void Garden::InstanceShot(Entity* itsCreator, float verticalDirection)
 
 void Garden::InstanceShotRoc(Entity* itsCreator, float verticalDirection)
 {
-	int radiusShot = 25;
+	float radiusShot = ENTITYRADIUS/2;
 	sf::Vector2f pos = itsCreator->GetPosition();
-	int sizeEntity = itsCreator->GetRadius();
+	float sizeEntity = itsCreator->GetRadius();
 	int type = itsCreator->GetType();
 	if (type == TYPEZOMBIE)
 	{
@@ -330,10 +342,55 @@ bool Garden::IsZoneEmptyPlant(sf::Vector2f itMePos, float area)
 }
 
 
-void Garden::CreatNewPlant(float radius, int line, bool rigidBody, int life)
+void Garden::CreatNewPlant(float radius, bool rigidBody, int life, int line)
 {
-	for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
+	sf::Vector2i sizeWindow = GameManager::Get()->GetWindowSize();
+	for (int i = 100;  i < sizeWindow.x; i += 150)
 	{
-
+		if (IsZoneEmptyPlant(sf::Vector2f((float)i,(float)line), 100.f))
+		{
+			CreatPlant(radius, sf::Vector2f((float)i, (float)line), rigidBody, life);
+			break;
+		}
 	}
+}
+
+void Garden::SetMousePosition(sf::Vector2f mousePos)
+{
+	mMousePos = mousePos;
+}
+
+sf::Vector2f Garden::GetMousePosition()
+{
+	return mMousePos;
+}
+
+void Garden::SetModeCreator(int modeCreator)
+{
+	mModeCreator = modeCreator;
+}
+
+int Garden::GetModeCreator()
+{
+	return mModeCreator;
+}
+
+void Garden::IncreaseZombiePass()
+{
+	mZombiePass++;
+}
+
+int Garden::GetZombiePass()
+{
+	return mZombiePass;
+}
+
+void Garden::IncreaseZombieDestroy()
+{
+	mZombieDestroy++;
+}
+
+int Garden::GetZombieDestroy()
+{
+	return mZombieDestroy;
 }

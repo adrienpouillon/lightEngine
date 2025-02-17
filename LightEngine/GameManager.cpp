@@ -164,3 +164,13 @@ sf::Vector2i GameManager::GetWindowSize()
 {
 	return mSize;
 }
+
+sf::Color GameManager::GetClearColor()
+{
+	return mClearColor;
+}
+
+void GameManager::SetClearColor(sf::Color Color)
+{
+	mClearColor = Color;
+}
