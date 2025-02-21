@@ -11,6 +11,21 @@
 #define LINETWO HEIGHTLINE + LINEONE
 #define LINETHREE HEIGHTLINE + LINETWO
 
+#define LIFEPLANT 3
+#define LIFESHOT 3
+#define LIFESHOTROC 3
+#define LIFEZOMBIE 3
+#define LIFEZOMBIECONE 3
+#define LIFEZOMBIESPORT 3
+
+#define SPEEDZOMBIE 20.f
+
+#define CREATELOW 1.5f
+#define CREATENORMAL 0.8f
+#define CREATEFAST 0.4f
+#define CREATEAPPOCALYPSE 0.1f
+#define CREATENOSTOP 0.f
+
 #define MODEZOMBIE 0
 #define MODEPLANT MODEZOMBIE + 1
 
@@ -25,12 +40,20 @@ protected:
 	Mouse* mMouse;
 	int mZombiePass;
 	int mZombieDestroy;
+	bool mIaZombie;
+	bool mIaPlant;
+	float mTimeZombieCreat;
+	float mTimeZombieCreatProgress;
 public:
 	void OnInitialize();
 
 	void CreatShot(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life, int type, float verticalDirection);
 
 	void CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
+
+	void CreatZombieCone(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
+
+	void CreatZombieSport(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
 
 	void CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life);
 
@@ -49,6 +72,8 @@ public:
 	void InstanceShot(Entity* itsCreator, float verticalDirection);
 
 	void InstanceShotRoc(Entity* itsCreator, float verticalDirection);
+
+	int SeachLine(int y);
 
 	bool IsAlongLine(Entity* itMe);
 
@@ -82,7 +107,21 @@ public:
 
 	bool IsZoneEmptyPlant(sf::Vector2f itMePos, float area);
 
+	int NbPlantInLine(int line);
+
 	void CreatNewPlant(float radius, bool rigidBody, int life, int line);
+
+	int RandomLine(int nbLine);
+
+	void IaAction();
+
+	void SetTimeCreat(float time);
+
+	float GetTimeCreat();
+
+	bool GetIaZOMBIE();
+
+	bool GetIaPlant();
 
 	template<typename T>
 	T* GetEntity();
@@ -98,6 +137,15 @@ public:
 
 	template<typename T, typename A>
 	std::vector<T*> GetAllTypeConvert(std::list<A*> tabTypeA);
+
+	template<typename T, typename A>
+	std::vector<T*> GetConvertVector(std::vector<A*> tabTypeA);
+
+	template<typename T>
+	bool VectorIsEmpty(std::vector<T*> tabTypeA);
+
+	template<typename T>
+	std::vector<T*> AllEntityInline(int line);
 
 	void SetMousePosition(sf::Vector2f mousePos);
 
@@ -160,7 +208,8 @@ template<typename T, typename A>
 inline std::vector<T*> Garden::GetAllTypeConvert(std::vector<A*> tabTypeA)
 {
 	std::vector<T*> allTypeT;
-	for (int i = 0; i < tabTypeA.size(); ++i)
+	int lenght = tabTypeA.size();
+	for (int i = 0; i < lenght; ++i)
 	{
 		if (T* entityConvert = dynamic_cast<T*>(tabTypeA[i]))
 		{
@@ -174,7 +223,7 @@ template<typename T, typename A>
 inline std::vector<T*> Garden::GetAllTypeConvert(std::list<A*> tabTypeA)
 {
 	std::vector<T*> allTypeT;
-	for (auto it = (*tabTypeA).begin(); it != (*tabTypeA).end(); )
+	for (auto it = (tabTypeA).begin(); it != (tabTypeA).end(); )
 	{
 		if (T* entityConvert = dynamic_cast<T*>(*it))
 		{
@@ -185,3 +234,39 @@ inline std::vector<T*> Garden::GetAllTypeConvert(std::list<A*> tabTypeA)
 	return allTypeT;
 }
 
+template<typename T, typename A>
+inline std::vector<T*> Garden::GetConvertVector(std::vector<A*> tabTypeA)
+{
+	std::vector<T*> allTypeT;
+	for (int i = 0; i < (int)tabTypeA.size(); ++i)
+	{
+		allTypeT.push_back(tabTypeA[i]);
+	}
+	return allTypeT;
+}
+
+template<typename T>
+inline bool Garden::VectorIsEmpty(std::vector<T*> tabTypeA)
+{
+	if ((int)tabTypeA.size() == 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+template<typename T>
+inline std::vector<T*> Garden::AllEntityInline(int line)
+{
+	std::vector<T*> allEntityInLine;
+	std::vector<T*> allEntity = GetAllTypeConvert<T>(*mAllEntity);
+	int lenght = allEntity.size();
+	for (int i = 0; i < lenght; ++i)
+	{
+		if (allEntity[i]->GetPosition().y > line - HEIGHTLINE / 3 && allEntity[i]->GetPosition().y < line + HEIGHTLINE / 3)
+		{
+			allEntityInLine.push_back(allEntity[i]);
+		}
+	}
+	return allEntityInLine;
+}

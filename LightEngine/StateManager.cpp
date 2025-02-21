@@ -6,7 +6,12 @@ StateManager::StateManager()
 {
 }
 
-void StateManager::Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, Entity* id)
+void StateManager::InitBase(Entity* id)
+{
+	mThis = id;
+}
+
+void StateManager::Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, State startState)
 {
 	//mode use
 	//modeUse = NOUSE = 0 -> rien
@@ -14,7 +19,8 @@ void StateManager::Init(int capacity, float speed, float reloadTime, float shoot
 	//modeUse = WALKINGUSE = 2 -> walking uniquement
 	//modeUse = SHOOTTINGWALKINGUSE = 3 -> shooter + walking
 
-	mThis = id;
+	mState = startState;
+
 	mCanShoot = false;
 	mCanReload = false;
 	if (modeUse == SHOOTINGUSE || modeUse == SHOOTTINGWALKINGUSE)
@@ -56,6 +62,8 @@ void StateManager::Init(int capacity, float speed, float reloadTime, float shoot
 
 	mCapacity = capacity;
 	mAmmo = capacity;
+
+	Start();
 }
 
 void StateManager::OnUpdate(float deltaTime)
@@ -120,6 +128,63 @@ void StateManager::Update(float deltaTime)
 	SetIsCollide(false);
 }
 
+void StateManager::Start()
+{
+	switch (mState)
+	{
+	case State::Full:
+		if (FullState* full = GetState<FullState>())
+		{
+			full->Start();
+		}
+		IsFull();
+		break;
+	case State::Loaded:
+		if (LoadedState* loaded = GetState<LoadedState>())
+		{
+			loaded->Start();
+		}
+		IsLoaded();
+		break;
+	case State::Empty:
+		if (EmptyState* empty = GetState<EmptyState>())
+		{
+			empty->Start();
+		}
+		IsEmpty();
+		break;
+	case State::Shooting:
+		if (ShootingState* shooting = GetState<ShootingState>())
+		{
+			shooting->Start();
+		}
+		IsShooting();
+		break;
+	case State::Reloading:
+		if (ReloadingState* reloading = GetState<ReloadingState>())
+		{
+			reloading->Start();
+		}
+		IsReloading();
+		break;
+	case State::Walking:
+		if (WalkingState* walking = GetState<WalkingState>())
+		{
+			walking->Start();
+		}
+		IsWalking();
+		break;
+	case State::Eating:
+		if (EatingState* eating = GetState<EatingState>())
+		{
+			eating->Start();
+		}
+		IsEating();
+		break;
+	}
+	SetIsCollide(false);
+}
+
 bool StateManager::TransitionTo(State newState)
 {
 	int currenteStateIndex = static_cast<int>(mState);
@@ -131,6 +196,7 @@ bool StateManager::TransitionTo(State newState)
 	}
 
 	mState = newState;
+	Start();
 
 	return true;
 }

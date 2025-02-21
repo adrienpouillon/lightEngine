@@ -12,14 +12,17 @@ void Garden::OnInitialize()
 	mModeCreator = MODEZOMBIE;
 	mZombiePass = 0;
 	mZombieDestroy = 0;
+	mIaZombie = false;
+	mIaPlant = true;
+	mTimeZombieCreat = CREATELOW;
 
 	mMouse = CreateEntity<Mouse>(5, sf::Color::Red);
 
-	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINEONE), false, 3);
+	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINEONE), false, LIFEPLANT);
 
-	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINETWO), false, 3);
+	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINETWO), false, LIFEPLANT);
 
-	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINETHREE), false, 3);
+	CreatPlant(ENTITYRADIUS, sf::Vector2f(COLLUMPLANT, LINETHREE), false, LIFEPLANT);
 
 }
 
@@ -39,8 +42,28 @@ void Garden::CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int lif
 	zombie->SetPosition(pos.x, pos.y);
 	zombie->SetRigidBody(rigidBody);
 	zombie->SetLife(life);
-	zombie->Init(0, speed, 0.f, 0.f, 0.f, WALKINGUSE, zombie);
+	zombie->Init(0, speed, 0.f, 0.f, 0.f, WALKINGUSE, StateManager::State::Walking);
 	zombie->SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::Red, sf::Color::Yellow);
+}
+
+void Garden::CreatZombieCone(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed)
+{
+	Zombie* zombie = CreateEntity<Zombie>(radius, sf::Color::Red);
+	zombie->SetPosition(pos.x, pos.y);
+	zombie->SetRigidBody(rigidBody);
+	zombie->SetLife(life*5);
+	zombie->Init(0, speed/2, 0.f, 0.f, 0.f, WALKINGUSE, StateManager::State::Walking);
+	zombie->SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::Magenta, sf::Color::Yellow);
+}
+
+void Garden::CreatZombieSport(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed)
+{
+	Zombie* zombie = CreateEntity<Zombie>(radius, sf::Color::Red);
+	zombie->SetPosition(pos.x, pos.y);
+	zombie->SetRigidBody(rigidBody);
+	zombie->SetLife(life/4.f);
+	zombie->Init(0, speed * 4.f, 0.f, 0.f, 0.f, WALKINGUSE, StateManager::State::Walking);
+	zombie->SetAllColor(sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::White, sf::Color::Yellow);
 }
 
 void Garden::CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life)
@@ -49,7 +72,7 @@ void Garden::CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life
 	plant->SetPosition(pos.x, pos.y);
 	plant->SetRigidBody(rigidBody);
 	plant->SetLife(life * 100);
-	plant->Init(3, 0.f, 3.f, 1.f, 1.f, SHOOTINGUSE, plant);
+	plant->Init(3, 0.f, 3.f, 1.f, 1.f, SHOOTINGUSE, StateManager::State::Full);
 	plant->SetAllColor(sf::Color::Green, sf::Color::Green, sf::Color::Red, sf::Color::Yellow, sf::Color::Cyan, sf::Color::White, sf::Color::White);
 }
 
@@ -82,26 +105,28 @@ void Garden::OnEventMouse(const sf::Event& event)
 
 		if (!isExecute)
 		{
+			int line = SeachLine(event.mouseButton.y);
 			if (mModeCreator == MODEZOMBIE)
 			{
-				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, LINEONE), true, 3, 20.f);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
 			}
 			else if (mModeCreator == MODEPLANT)
 			{
-				CreatNewPlant(ENTITYRADIUS, false, 3, LINEONE);
+				CreatNewPlant(ENTITYRADIUS, false, LIFEPLANT, line);
 			}
 		}
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Middle)
 	{
+		int line = SeachLine(event.mouseButton.y);
 		if (mModeCreator == MODEZOMBIE)
 		{
-			CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, LINETWO), true, 3, 20.f);
+			CreatZombieSport(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
 		}
 		else if (mModeCreator == MODEPLANT)
 		{
-			CreatNewPlant(ENTITYRADIUS, false, 3, LINETWO);
+			CreatNewPlant(ENTITYRADIUS, false, LIFEPLANT, line);
 		}
 	}
 
@@ -119,13 +144,14 @@ void Garden::OnEventMouse(const sf::Event& event)
 
 		if (!isExecute)
 		{
+			int line = SeachLine(event.mouseButton.y);
 			if (mModeCreator == MODEZOMBIE)
 			{
-				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, LINETHREE), true, 3, 20.f);
+				CreatZombieCone(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
 			}
 			else if (mModeCreator == MODEPLANT)
 			{
-				CreatNewPlant(ENTITYRADIUS, false, 3, LINETHREE);
+				CreatNewPlant(ENTITYRADIUS, false, LIFEPLANT, line);
 			}
 		}
 	}
@@ -142,16 +168,32 @@ void Garden::OnEventKeyboard(const sf::Event& event)
 		}
 		SetModeCreator(0);
 	}
+
+	if (event.key.code == sf::Keyboard::Z)
+	{
+		mIaZombie = !mIaZombie;
+	}
+
+	if (event.key.code == sf::Keyboard::P)
+	{
+		mIaPlant = !mIaPlant;
+	}
 }
 
 void Garden::OnUpdate()
 {
 	sf::Vector2i sizeWindow = GameManager::Get()->GetWindowSize();
-	std::string stringPass = std::to_string(mZombiePass) + " Zombie qui a passe' vos defenses";
-	Debug::DrawText((float)sizeWindow.x / 5.f, 0.f, stringPass, sf::Color::Red);
-
 	std::string stringDestroy = std::to_string(mZombieDestroy) + " Zombie tue'";
-	Debug::DrawText(((float)(sizeWindow.x * 3)) / 4.f, 0.f, stringDestroy, sf::Color::Green);
+	Debug::DrawText(((float)sizeWindow.x / 4.f) , 0.f, stringDestroy, sf::Color::Green);
+
+	std::string stringPass = std::to_string(mZombiePass) + " Zombie qui a passe' vos defenses";
+	Debug::DrawText((float)(sizeWindow.x * 3) / 5.f, 0.f, stringPass, sf::Color::Red);
+
+	
+	if(mIaZombie)
+	{
+		IaAction();
+	}
 }
 
 bool Garden::TryShot(Entity* pEntity, float x, float y)
@@ -200,6 +242,26 @@ void Garden::InstanceShotRoc(Entity* itsCreator, float verticalDirection)
 		sizeEntity = -(sizeEntity + radiusShot);
 	}
 	CreatShot(radiusShot, sf::Color::Magenta, sf::Vector2f(pos.x + sizeEntity, pos.y), false, 1*20, type, verticalDirection);
+}
+
+int Garden::SeachLine(int y)
+{
+	if (y > LINEONE - HEIGHTLINE/2 && y < LINEONE + HEIGHTLINE/2)
+	{
+		return LINEONE;
+	}
+	
+	if (y > LINETWO - HEIGHTLINE/2 && y < LINETWO + HEIGHTLINE/2)
+	{
+		return LINETWO;
+	}
+
+	if (y > LINETHREE - HEIGHTLINE/2 && y < LINETHREE + HEIGHTLINE/2)
+	{
+		return LINETHREE;
+	}
+
+	return LINEONE;
 }
 
 bool Garden::IsAlongLine(Entity* itMe)
@@ -341,6 +403,11 @@ bool Garden::IsZoneEmptyPlant(sf::Vector2f itMePos, float area)
 	return true;
 }
 
+int Garden::NbPlantInLine(int line)
+{
+	std::vector<Plant*> allPlant = AllEntityInline<Plant>(line);
+	return (int)allPlant.size();
+}
 
 void Garden::CreatNewPlant(float radius, bool rigidBody, int life, int line)
 {
@@ -353,6 +420,161 @@ void Garden::CreatNewPlant(float radius, bool rigidBody, int life, int line)
 			break;
 		}
 	}
+}
+
+int Garden::RandomLine(int nbLine)
+{
+	int ran = GenerateRandomNumber(1, nbLine);
+	return ((ran * LINEONE) + ((HEIGHTLINE - LINEONE) * (ran - 1)));
+}
+
+void Garden::IaAction()
+{
+	mTimeZombieCreatProgress -= GetDeltaTime();
+	if (mTimeZombieCreatProgress < 0.f)
+	{
+		int line = RandomLine(3);
+		switch (line)
+		{
+		case LINEONE:
+		{
+			//creer dans la line 1
+			int nbPlant = NbPlantInLine(line);
+			if (nbPlant > 4)
+			{
+				//entre 5 plante et 8 plante
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				if (GenerateRandomNumber(0, 5) == 0)
+				{
+					CreatZombieCone(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				}
+				SetTimeCreat(CREATELOW);
+			}
+			else if (nbPlant > 2)
+			{
+				//entre 3 plante et 4 plante
+				CreatZombieCone(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				if (GenerateRandomNumber(0, 5) == 0)
+				{
+					CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				}
+				SetTimeCreat(CREATELOW);
+			}
+			else if (nbPlant > 0)
+			{
+				//entre 1 plante et 2 plante
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				SetTimeCreat(CREATELOW);
+			}
+			else
+			{
+				//0 plante
+				CreatZombieSport(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				SetTimeCreat(CREATELOW);
+			}
+			break;
+		}
+		case LINETWO:
+		{
+			//creer dans la line 2
+			int nbPlant = NbPlantInLine(line);
+			if (nbPlant > 4)
+			{
+				//entre 5 plante et 8 plante
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				if (GenerateRandomNumber(0, 5) == 0)
+				{
+					CreatZombieCone(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				}
+				SetTimeCreat(CREATELOW);
+			}
+			else if (nbPlant > 2)
+			{
+				//entre 3 plante et 4 plante
+				CreatZombieCone(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				if (GenerateRandomNumber(0, 5) == 0)
+				{
+					CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				}
+				SetTimeCreat(CREATELOW);
+			}
+			else if (nbPlant > 0)
+			{
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				SetTimeCreat(CREATELOW);
+			}
+			else
+			{
+				CreatZombieSport(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				SetTimeCreat(CREATELOW);
+			}
+			break;
+		}
+		case LINETHREE:
+		{
+			//creer dans la line 3
+			int nbPlant = NbPlantInLine(line);
+			if (nbPlant > 4)
+			{
+				//entre 5 plante et 8 plante
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				if (GenerateRandomNumber(0, 5) == 0)
+				{
+					CreatZombieCone(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				}
+				SetTimeCreat(CREATELOW);
+			}
+			else if (nbPlant > 2)
+			{
+				//entre 3 plante et 4 plante
+				CreatZombieCone(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				if (GenerateRandomNumber(0, 5) == 0)
+				{
+					CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				}
+				SetTimeCreat(CREATELOW);
+			}
+			else if (nbPlant > 0)
+			{
+				CreatZombie(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				SetTimeCreat(CREATELOW);
+			}
+			else
+			{
+				CreatZombieSport(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+				SetTimeCreat(CREATELOW);
+			}
+			break;
+		}
+		}
+		mTimeZombieCreatProgress = mTimeZombieCreat;
+	}
+}
+
+void Garden::SetTimeCreat(float time)
+{
+	mTimeZombieCreat = time;
+}
+
+float Garden::GetTimeCreat()
+{
+	return mTimeZombieCreat;
+}
+
+bool Garden::GetIaZOMBIE()
+{
+	return mIaZombie;
+}
+
+bool Garden::GetIaPlant()
+{
+	return mIaPlant;
 }
 
 void Garden::SetMousePosition(sf::Vector2f mousePos)

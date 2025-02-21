@@ -67,11 +67,15 @@ protected:
 public:
 	StateManager();
 
-	void Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, Entity* id);
+	void InitBase(Entity* id);
+
+	void Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, State startState);
 
 	void OnUpdate(float deltaTime);
 
 	void Update(float deltaTime);
+
+	void Start();
 
 	bool TransitionTo(State newState);
 

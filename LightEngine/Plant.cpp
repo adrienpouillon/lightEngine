@@ -7,9 +7,7 @@
 void Plant::OnInitialize()
 {
 	Alive::OnInitialize(5000);
-	StateManager::Init(3, 0.f, 3.f, 1.f, 1.f, SHOOTINGUSE, this);
-	SetAllColor(sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green, sf::Color::Green);
-	mState = State::Full;
+	StateManager::InitBase(this);
 }
 
 void Plant::OnCollision(Entity* other)
@@ -33,7 +31,10 @@ void Plant::OnUpdate()
 	Alive::OnUpdate();
 	StateManager::OnUpdate(GetDeltaTime());
 
-	IaAction();
+	if(GetScene<Garden>()->GetIaPlant())
+	{
+		IaAction();
+	}
 }
 
 void Plant::IaAction()
