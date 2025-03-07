@@ -58,6 +58,16 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>PVZ</Filter>
     </ClCompile>
+    <ClCompile Include="Peat.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Torch.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="SunFlower.cpp" />
+    <ClCompile Include="Sun.cpp" />
+    <ClCompile Include="Mower.cpp" />
+    <ClCompile Include="Saw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -105,6 +115,16 @@
     <ClInclude Include="Mouse.h">
       <Filter>PVZ</Filter>
     </ClInclude>
+    <ClInclude Include="Peat.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Torch.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="SunFlower.h" />
+    <ClInclude Include="Sun.h" />
+    <ClInclude Include="Mower.h" />
+    <ClInclude Include="Saw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scene.inl">

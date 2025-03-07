@@ -36,7 +36,7 @@ public:
 
 	float GetDeltaTime() const;
 
-	int GenerateRandomNumber(int min, int max);
+	static int GenerateRandomNumber(int min, int max);
 
 	sf::Color ChooseColor(int index);
 

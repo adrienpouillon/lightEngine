@@ -29,7 +29,7 @@ void StateManager::Init(int capacity, float speed, float reloadTime, float shoot
 		mAllState.push_back(new LoadedState(idletime, this));
 		mAllState.push_back(new EmptyState(idletime,  this));
 		mAllState.push_back(new ReloadingState(reloadTime, this));
-		mAllState.push_back(new ShootingState(shootTime, this));
+		mAllState.push_back(new ActioningState(shootTime, this));
 
 		mCapacity = capacity;
 		mAmmo = mCapacity;
@@ -96,12 +96,12 @@ void StateManager::Update(float deltaTime)
 		}
 		IsEmpty();
 		break;
-	case State::Shooting:
-		if (ShootingState* shooting = GetState<ShootingState>())
+	case State::Actioning:
+		if (ActioningState* actioning = GetState<ActioningState>())
 		{
-			shooting->Update(deltaTime);
+			actioning->Update(deltaTime);
 		}
-		IsShooting();
+		IsActioning();
 		break;
 	case State::Reloading:
 		if (ReloadingState* reloading = GetState<ReloadingState>())
@@ -153,12 +153,12 @@ void StateManager::Start()
 		}
 		IsEmpty();
 		break;
-	case State::Shooting:
-		if (ShootingState* shooting = GetState<ShootingState>())
+	case State::Actioning:
+		if (ActioningState* actioning = GetState<ActioningState>())
 		{
-			shooting->Start();
+			actioning->Start();
 		}
-		IsShooting();
+		IsActioning();
 		break;
 	case State::Reloading:
 		if (ReloadingState* reloading = GetState<ReloadingState>())
@@ -213,9 +213,9 @@ void StateManager::IsEmpty()
 {
 	mThis->GetShape()->setFillColor(mColor[State::Empty]);
 }
-void StateManager::IsShooting()
+void StateManager::IsActioning()
 {
-	mThis->GetShape()->setFillColor(mColor[State::Shooting]);
+	mThis->GetShape()->setFillColor(mColor[State::Actioning]);
 }
 void StateManager::IsReloading()
 {
@@ -235,7 +235,7 @@ void StateManager::SetAllColor(sf::Color full, sf::Color loaded, sf::Color empty
 	mColor[State::Full] = full;
 	mColor[State::Loaded] = loaded;
 	mColor[State::Empty] = empty;
-	mColor[State::Shooting] = shoot;
+	mColor[State::Actioning] = shoot;
 	mColor[State::Reloading] = reload;
 	mColor[State::Walking] = walk;
 	mColor[State::Eating] = eat;
@@ -244,17 +244,40 @@ void StateManager::SetAllColor(sf::Color full, sf::Color loaded, sf::Color empty
 void StateManager::Shoot(int tag)
 {
 	//si peut tirer
-	if (TransitionTo(State::Shooting))
+	if (TransitionTo(State::Actioning))
 	{
 		//tirer
-		if (ShootingState* shooting = GetState<ShootingState>())
+		if (ActioningState* actioning = GetState<ActioningState>())
 		{
-			shooting->Start();
+			actioning->Start();
 		}
 		SetCanShoot(false);
+		SetCanBoost(false);
 		SetCanReload(false);
 		AmmoLessLess();
 		OnShoot(tag);
+	}
+	else
+	{
+		std::cout << "..." << std::endl;
+	}
+}
+
+void StateManager::Boost(int tag)
+{
+	//si peut tirer
+	if (TransitionTo(State::Actioning))
+	{
+		//tirer
+		if (ActioningState* actioning = GetState<ActioningState>())
+		{
+			actioning->Start();
+		}
+		SetCanShoot(false);
+		SetCanBoost(false);
+		SetCanReload(false);
+		AmmoLessLess();
+		OnBoost(tag);
 	}
 	else
 	{
@@ -310,7 +333,8 @@ void StateManager::SuperReload()
 	}
 }
 
-void StateManager::OnShoot(int tag){}
+void StateManager::OnShoot(int tag) {}
+void StateManager::OnBoost(int tag) {}
 
 void StateManager::SetIsCollide(bool isCollide)
 {
@@ -365,6 +389,16 @@ void StateManager::SetCanReload(bool canReload)
 bool StateManager::GetCanReload()
 {
 	return mCanReload;
+}
+
+void StateManager::SetCanBoost(bool canBoost)
+{
+	mCanBoost = canBoost;
+}
+
+bool StateManager::GetCanBoost()
+{
+	return mCanBoost;
 }
 
 StateManager::~StateManager()

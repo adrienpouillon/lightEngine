@@ -5,26 +5,23 @@
 void Shot::OnInitialize()
 {
 	Alive::OnInitialize(1);
-	SetType(TYPEPLANT);
-	//sf::Vector2f pos = GetPosition();
-	//Entity::GoToDirection(pos.x + 1, pos.y, 200.f);
-	//mType = TYPEPLANT;
+	SetTag(TYPEPLANT);
 }
 
 void Shot::OnCollision(Entity* other)
 {
 	if(other != nullptr)
 	{
-		if (Zombie* zombie = GetScene<Garden>()->GetTypeConvert<Zombie*>(other))
+		if (GetTag() >= TYPEPLANT)
 		{
-			if (zombie->GetType() != mType)
+			if (other->GetTag() <= TYPEZOMBIE)
 			{
 				Alive::LifeLessLess();
 			}
 		}
-		else if (Shot* shot = GetScene<Garden>()->GetTypeConvert<Shot*>(other))
+		else if(GetTag() <= TYPEZOMBIE)
 		{
-			if (shot->GetType() != mType)
+			if (other->GetTag() >= TYPEPLANT)
 			{
 				Alive::LifeLessLess();
 			}
@@ -41,7 +38,7 @@ void Shot::OnUpdate()
 {
 	Alive::OnUpdate();
 	float ShotWidth = mShape.getRadius() * 2.f;
-	Entity::OutWindow(ShotWidth * 10.f, ShotWidth * 10.f);
+	Entity::OutWindow(ShotWidth * 10.f, COLLUMZOMBIE * 2);
 	InsertInLine();
 }
 
@@ -81,25 +78,20 @@ void Shot::SetLife(int life)
 	Alive::SetLife(life);
 }
 
-void Shot::SetType(int type)
+void Shot::SetTag(int type)
 {
-	mType = type;
+	Entity::SetTag(TypeUtils::TypeGroupe(type));
 	SetDirectionShot(GetPosition());
 }
 
 void Shot::SetDirectionShot(sf::Vector2f pos)
 {
-	if (mType == TYPEPLANT)
+	if (GetTag() >= TYPEPLANT)
 	{
 		Entity::GoToDirection((int)pos.x + 1, (int)pos.y, 200.f);
 	}
-	else if (mType == TYPEZOMBIE)
+	else if (GetTag() <= TYPEZOMBIE)
 	{
 		Entity::GoToDirection((int)pos.x - 1, (int)pos.y, 200.f);
 	}
-}
-
-int Shot::GetType()
-{
-	return mType;
 }

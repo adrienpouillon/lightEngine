@@ -4,8 +4,21 @@
 #include <SFML/Graphics/CircleShape.hpp>
 
 #define TYPENO 0
-#define TYPEPLANT TYPENO + 1
-#define TYPEZOMBIE TYPEPLANT + 1
+#define TYPESUN TYPENO + 1
+#define TYPEPLANT TYPESUN + 1
+#define TYPEPLANTPEAT TYPEPLANT + 1
+#define TYPEPLANTTORCH TYPEPLANTPEAT + 1
+#define TYPEPLANTSAW TYPEPLANTTORCH + 1
+#define TYPEPLANTSUNFLOWER TYPEPLANTSAW + 1
+#define TYPEPLANTMOWER TYPEPLANTSUNFLOWER + 1
+
+
+#define TYPEZOMBIE TYPENO - 1
+#define TYPEZOMBIENORMAL TYPEZOMBIE - 1
+#define TYPEZOMBIECONE TYPEZOMBIENORMAL - 1
+#define TYPEZOMBIESPORT TYPEZOMBIECONE - 1
+#define TYPEZOMBIERA TYPEZOMBIESPORT - 1
+#define TYPEZOMBIESHELD TYPEZOMBIERA - 1
 
 #define NOSPEED sf::Vector2f(0,0)
 
@@ -43,7 +56,6 @@ public:
 	sf::Vector2f GetDirection();
 	float GetSpeed();
 	void SetSpeed(float speed) { mSpeed = speed; }
-	void SetTag(int tag) { mTag = tag; }
 	float GetRadius() const { return mShape.getRadius(); }
 	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }
 	bool IsRigidBody() const { return mRigidBody; }
@@ -51,7 +63,10 @@ public:
     sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;
 	sf::Shape* GetShape() { return &mShape; }
 
-	bool IsTag(int tag) const { return mTag == tag; }
+	virtual void SetTag(int tag) { mTag = tag; }
+	virtual bool IsTag(int tag) const { return mTag == tag; }
+	virtual int GetTag() { return mTag; }
+
 	//if entity collide with other
 	//this fonction call OnCollision with entity* other
     bool IsColliding(Entity* other) const;
@@ -76,8 +91,6 @@ public:
 	//for creat entity
     template<typename T>
     T* CreateEntity(float radius, const sf::Color& color);
-
-	virtual int GetType();
 
 protected:
     Entity() = default;

@@ -10,28 +10,33 @@ void Zombie::OnInitialize()
 	sf::Vector2f pos = GetPosition();
 	Entity::GoToDirection((int)pos.x - 1, (int)pos.y, speed);
 	StateManager::InitBase(this);
+	SetTag(TYPEZOMBIE);
 }
 
 void Zombie::OnCollision(Entity* other)
 {
 	if (other != nullptr)
 	{
-		if (Shot* shot = GetScene<Garden>()->GetTypeConvert<Shot*>(other))
+		if (other->GetTag() >= TYPEPLANT)
 		{
-			if (shot->GetType() == TYPEPLANT)
+			if (Plant* plant = Garden::GetTypeConvert<Plant*>(other))
+			{
+				//activer le mode eating
+				SetIsCollide(true);
+			}
+			else
 			{
 				Alive::LifeLessLess();
 			}
-		}
-		if (Plant* plant = GetScene<Garden>()->GetTypeConvert<Plant*>(other))
-		{
-			SetIsCollide(true);
 		}
 	}
 	else
 	{
 		Destroy();
-		GetScene<Garden>()->IncreaseZombiePass();
+		Garden* garden = GetScene<Garden>();
+		garden->IncreaseZombiePass();
+		garden->IncreaseZombieCoin(250);
+		garden->IncreasePlantCoin(-1);
 	}
 }
 
@@ -40,21 +45,28 @@ void Zombie::OnUpdate()
 	Alive::OnUpdate();
 	StateManager::OnUpdate(GetDeltaTime());
 	float zombieWidth = mShape.getRadius() * 2.f;
-	Entity::OutWindow(zombieWidth, zombieWidth * 10.f);
+	Entity::OutWindow(zombieWidth, COLLUMZOMBIE*2);
+	OutGarden();
 }
 
 void Zombie::ActionDead()
 {
-	GetScene<Garden>()->IncreaseZombieDestroy();
+	Garden* garden = GetScene<Garden>();
+	garden->IncreaseZombieDestroy();
+	garden->IncreasePlantCoin(1);
 	Entity::Destroy();
+}
+
+void Zombie::OutGarden()
+{
+	sf::Vector2f pos = GetPosition();
+	if (pos.x > COLLUMZOMBIE * 2)
+	{
+		SetPosition(COLLUMZOMBIE, pos.y);
+	}
 }
 
 void Zombie::SetLife(int life)
 {
 	Alive::SetLife(life);
-}
-
-int Zombie::GetType()
-{
-	return TYPEZOMBIE;
 }

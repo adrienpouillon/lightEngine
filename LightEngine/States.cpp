@@ -1,5 +1,6 @@
 #include "States.h"
 #include <iostream>
+#include "Garden.h"
 
 States::States(StateManager* stateManager)
 {
@@ -16,6 +17,12 @@ FullState::FullState(float idleTime, StateManager* stateManager) : States(stateM
 
 void FullState::Start()
 {
+	if (mStateManager->GetThis()->GetScene<Garden>()->GetIaPlant() == false)
+	{
+		SetTimeProgress(0.f);
+		return;
+	}
+
 	SetTimeProgress(mIdleTime);
 }
 
@@ -25,6 +32,7 @@ void FullState::Update(float deltaTime)
 	if (mIdleProgress < 0.f)
 	{
 		mStateManager->SetCanShoot(true);
+		mStateManager->SetCanBoost(true);
 	}
 }
 
@@ -42,6 +50,12 @@ LoadedState::LoadedState(float idleTime, StateManager* stateManager) : States(st
 
 void LoadedState::Start()
 {
+	if (mStateManager->GetThis()->GetScene<Garden>()->GetIaPlant() == false)
+	{
+		SetTimeProgress(0.f);
+		return;
+	}
+
 	SetTimeProgress(mIdleTime);
 }
 
@@ -51,6 +65,7 @@ void LoadedState::Update(float deltaTime)
 	if (mIdleProgress < 0.f)
 	{
 		mStateManager->SetCanShoot(true);
+		mStateManager->SetCanBoost(true);
 		mStateManager->SetCanReload(true);
 	}
 }
@@ -69,6 +84,12 @@ EmptyState::EmptyState(float idleTime, StateManager* stateManager) : States(stat
 
 void EmptyState::Start()
 {
+	if (mStateManager->GetThis()->GetScene<Garden>()->GetIaPlant() == false)
+	{
+		SetTimeProgress(0.f);
+		return;
+	}
+
 	SetTimeProgress(mIdleTime);
 }
 
@@ -88,20 +109,20 @@ void EmptyState::SetTimeProgress(float idleProgress)
 
 
 
-ShootingState::ShootingState(float shootTime, StateManager* stateManager) : States(stateManager), mShootTime(shootTime), mShootProgress(shootTime)
+ActioningState::ActioningState(float actioningTime, StateManager* stateManager) : States(stateManager), mActioningTime(actioningTime), mActioningProgress(actioningTime)
 {
 
 }
 
-void ShootingState::Start()
+void ActioningState::Start()
 {
-	SetShootProgress(mShootTime);
+	SetActioningProgress(mActioningTime);
 }
 
-void ShootingState::Update(float deltaTime)
+void ActioningState::Update(float deltaTime)
 {
-	mShootProgress -= deltaTime;
-	if (mShootProgress < 0.f)
+	mActioningProgress -= deltaTime;
+	if (mActioningProgress < 0.f)
 	{
 		if (mStateManager->GetAmmo() <= 0)
 		{
@@ -126,9 +147,9 @@ void ShootingState::Update(float deltaTime)
 	}
 }
 
-void ShootingState::SetShootProgress(float shootProgress)
+void ActioningState::SetActioningProgress(float actioningProgress)
 {
-	mShootProgress = shootProgress;
+	mActioningProgress = actioningProgress;
 }
 
 

@@ -27,12 +27,18 @@
     <ClCompile Include="Garden.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Mower.cpp" />
+    <ClCompile Include="Peat.cpp" />
     <ClCompile Include="Plant.cpp" />
     <ClCompile Include="SampleScene.cpp" />
+    <ClCompile Include="Saw.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shot.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="States.cpp" />
+    <ClCompile Include="Sun.cpp" />
+    <ClCompile Include="SunFlower.cpp" />
+    <ClCompile Include="Torch.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
@@ -44,12 +50,18 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Garden.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Mower.h" />
+    <ClInclude Include="Peat.h" />
     <ClInclude Include="Plant.h" />
     <ClInclude Include="SampleScene.h" />
+    <ClInclude Include="Saw.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shot.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="States.h" />
+    <ClInclude Include="Sun.h" />
+    <ClInclude Include="SunFlower.h" />
+    <ClInclude Include="Torch.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Zombie.h" />
   </ItemGroup>

@@ -67,19 +67,19 @@ public:
 
 
 
-class ShootingState :public States
+class ActioningState :public States
 {
 protected:
-	float mShootProgress;
-	float mShootTime;
+	float mActioningProgress;
+	float mActioningTime;
 public:
-	ShootingState(float shootTime, StateManager* stateManager);
+	ActioningState(float actioningTime, StateManager* stateManager);
 
 	virtual void Start();
 
 	virtual void Update(float deltaTime);
 
-	void SetShootProgress(float shootProgress);
+	void SetActioningProgress(float actioningProgress);
 
 };
 

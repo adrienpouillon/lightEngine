@@ -1,12 +1,12 @@
 #pragma once
 #include "Entity.h"
+#include "Utils.h"
 #include "Alive.h"
 #include "StateManager.h"
 
 class Zombie :public Entity, public Alive, public StateManager
 {
 protected:
-	virtual ~Zombie() {};
 
 public:
 
@@ -18,9 +18,12 @@ public:
 
 	virtual void ActionDead();
 
+	void OutGarden();
+
 	void SetLife(int life);
 
-	virtual int GetType();
+protected:
 
+	virtual ~Zombie() {};
 };
 

@@ -3,13 +3,21 @@
 #include "Mouse.h"
 
 #define ENTITYRADIUS 50 
+#define SUNRADIUS 16
 
 #define COLLUMPLANT ENTITYRADIUS*2
-#define COLLUMZOMBIE 1350
+#define COLLUMZOMBIE 2020
 #define HEIGHTLINE 250
 #define LINEONE 100
 #define LINETWO HEIGHTLINE + LINEONE
 #define LINETHREE HEIGHTLINE + LINETWO
+#define NBLINE 3
+
+#define STARTAREACREATPLANT 100
+#define BETEWEENPLANT 150
+#define NBPLANT 10
+#define ENDAREACREATPLANT STARTAREACREATPLANT + (BETEWEENPLANT * NBPLANT)
+
 
 #define LIFEPLANT 3
 #define LIFESHOT 3
@@ -18,18 +26,42 @@
 #define LIFEZOMBIECONE 3
 #define LIFEZOMBIESPORT 3
 
+#define COSTZOMBIENORMAL 25 - 1
+#define COSTZOMBIECONE 50 - 1
+#define COSTZOMBIESPORT 12 - 1
+#define COSTPLANTPEAT 100 - 1
+#define COSTPLANTTORCH 100 - 1
+#define COSTPLANTSUNFLOWER 200 - 1
+#define COSTPLANTMOWER 300 - 1
+
+#define COSTPLANTMINI 100
+
 #define SPEEDZOMBIE 20.f
 
-#define CREATELOW 1.5f
-#define CREATENORMAL 0.8f
-#define CREATEFAST 0.4f
-#define CREATEAPPOCALYPSE 0.1f
-#define CREATENOSTOP 0.f
+#define CREATESLEEP 0
+#define CREATEMICRO CREATESLEEP + 1
+#define CREATELOW CREATEMICRO + 1
+#define CREATENORMAL CREATELOW + 2
+#define CREATEFAST CREATENORMAL + 3
+#define CREATEAPPOCALYPSE CREATEFAST + 5
+#define CREATEINFINITY CREATEAPPOCALYPSE + 10
+#define CREATENOSTOP CREATEINFINITY + 15
+
+#define TIMECREATENO 100.f
+#define TIMECREATEMICRO 2.f
+#define TIMECREATELOW 1.5f
+#define TIMECREATENORMAL 0.8f
+#define TIMECREATEFAST 0.6f
+#define TIMECREATEAPPOCALYPSE 0.4f
+#define TIMECREATEINFINITY 0.3f
+#define TIMECREATENOSTOP 2.f
 
 #define MODEZOMBIE 0
 #define MODEPLANT MODEZOMBIE + 1
 
 #define MAXMODECREATOR MODEPLANT + 1
+
+class Shot;
 
 class Garden :public Scene
 {
@@ -40,88 +72,81 @@ protected:
 	Mouse* mMouse;
 	int mZombiePass;
 	int mZombieDestroy;
+	int mPlantEated;
 	bool mIaZombie;
 	bool mIaPlant;
+	bool mIaPlantCreat;
+	bool mCheat;
 	float mTimeZombieCreat;
 	float mTimeZombieCreatProgress;
+	int mNbCreationZombie;
+	int mDifficulty;
+	int mFormerDifficulty;
+	int mWave;
+	bool mHaveZombieInGame;
+	int mPlantCoin;
+	int mZombieCoin;
 public:
 	void OnInitialize();
 
 	void CreatShot(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life, int type, float verticalDirection);
-
+	void CreatSun(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int type);
 	void CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
-
 	void CreatZombieCone(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
-
 	void CreatZombieSport(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
-
-	void CreatPlant(float radius, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatPeat(float radius, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatTorch(float radius, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatSunFlower(float radius, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatMower(float radius, sf::Vector2f pos, bool rigidBody);
 
 	void OnEvent(const sf::Event& event);
-
 	void OnEventMouse(const sf::Event& event);
-
 	void OnEventKeyboard(const sf::Event& event);
 
 	void OnUpdate();
 
-	bool TryShot(Entity* pEntity, float x, float y);
+	void DrawPlant();
+	void DrawZombie();
 
+	bool TryToErase(Entity* pEntity, float x, float y);
+	bool TryCollect(Entity* pEntity, float x, float y);
+	bool TryShot(Entity* pEntity, float x, float y);
 	bool TryShotRoc(Entity* pEntity, float x, float y);
 
-	void InstanceShot(Entity* itsCreator, float verticalDirection);
+	void InstanceShot(Entity* itsCreator, float verticalDirection){InstanceShot(itsCreator, verticalDirection, itsCreator->GetPosition());}
+	void InstanceShotRoc(Entity* itsCreator, float verticalDirection){InstanceShotRoc(itsCreator, verticalDirection, itsCreator->GetPosition());}
+	void InstanceShot(Entity* itsCreator, float verticalDirection, sf::Vector2f pos){InstanceShot(itsCreator, verticalDirection, pos, ENTITYRADIUS / 2);}
+	void InstanceShotRoc(Entity* itsCreator, float verticalDirection, sf::Vector2f pos){InstanceShotRoc(itsCreator, verticalDirection, pos, ENTITYRADIUS / 2);}
+	void InstanceShot(Entity* itsCreator, float verticalDirection, sf::Vector2f pos, float radiusShot);
+	void InstanceShotRoc(Entity* itsCreator, float verticalDirection, sf::Vector2f pos, float radiusShot);
+	void InstanceSun(sf::Vector2f pos){CreatSun(SUNRADIUS, sf::Color::Yellow, pos, false, TYPESUN);}
+	void InstanceSunDouble(sf::Vector2f pos){CreatSun(SUNRADIUS * 2, sf::Color::Yellow, pos, false, TYPESUN);}
 
-	void InstanceShotRoc(Entity* itsCreator, float verticalDirection);
+	void CountWave();
 
-	int SeachLine(int y);
+	void CreatNewPeat(float radius, bool rigidBody, int life, int line);
+	void CreatNewTorch(float radius, bool rigidBody, int life, int line);
+	void CreatNewSunFlower(float radius, bool rigidBody, int life, int line);
+	void CreatNewMower(float radius, bool rigidBody, int line);
 
-	bool IsAlongLine(Entity* itMe);
+	void IaActionPlantCreat();
+	void IACreatPeatTorch(int nbPlant, int line);
+	void IaActionZombie();
 
-	bool IsAlongLineDown(Entity* itMe);
-
-	bool IsAlongLineUp(Entity* itMe);
-
-	bool IsLineEmptyEnemy(int itMeType, float itMePos);
-
-	bool IsAreaEmpty(Entity* itMe, float area);
-
-	bool IsAreaEmptyUp(Entity* itMe, float area);
-
-	bool IsAreaEmptyDown(Entity* itMe, float area);
-
-	bool IsZoneEmptyEnemy(int itMeType, sf::Vector2f itMePos, float area);
-
-	bool IsEnemieInLine(float itMePos, float entityPos, int itMeType, int entityType);
-
-	bool IsAllieInLine(float itMePos, float entityPos, int itMeType, int entityType);
-
-	bool IsEmptyPlantInLine(Entity* itMe);
-
-	bool IsEmptyPlantInLineUp(Entity* itMe);
-
-	bool IsEmptyPlantInLineDown(Entity* itMe);
-
-	bool IsLineEmptyPlant(float itMePos);
-
-	bool IsPlantInLine(float itMePos, float entityPos, Entity* entity);
-
-	bool IsZoneEmptyPlant(sf::Vector2f itMePos, float area);
-
-	int NbPlantInLine(int line);
-
-	void CreatNewPlant(float radius, bool rigidBody, int life, int line);
-
-	int RandomLine(int nbLine);
-
-	void IaAction();
+	void CreatZombieInLineWithNbZombie(int nbLine, int firstLine, int betweenLine);
+	void CreatZombieInLineWithNbPlant(int line, float decalX);
 
 	void SetTimeCreat(float time);
+
+	void SetTimeCreatWithDifficulty(int difficulty);
 
 	float GetTimeCreat();
 
 	bool GetIaZOMBIE();
 
 	bool GetIaPlant();
+
+	bool GetIaPlantCreat();
 
 	template<typename T>
 	T* GetEntity();
@@ -130,22 +155,19 @@ public:
 	std::vector<T*> GetAllEntity();
 
 	template<typename T, typename A>
-	T GetTypeConvert(A TypeA);
+	static T GetTypeConvert(A TypeA);
 
 	template<typename T, typename A>
-	std::vector<T*> GetAllTypeConvert(std::vector<A*> tabTypeA);
+	static std::vector<T*> GetAllTypeConvert(std::vector<A*> tabTypeA);
 
 	template<typename T, typename A>
-	std::vector<T*> GetAllTypeConvert(std::list<A*> tabTypeA);
+	static std::vector<T*> GetAllTypeConvert(std::list<A*> tabTypeA);
 
 	template<typename T, typename A>
-	std::vector<T*> GetConvertVector(std::vector<A*> tabTypeA);
+	static std::vector<T*> GetConvertVector(std::vector<A*> tabTypeA);
 
 	template<typename T>
-	bool VectorIsEmpty(std::vector<T*> tabTypeA);
-
-	template<typename T>
-	std::vector<T*> AllEntityInline(int line);
+	static bool VectorIsEmpty(std::vector<T*> tabTypeA);
 
 	void SetMousePosition(sf::Vector2f mousePos);
 
@@ -155,6 +177,10 @@ public:
 
 	int GetModeCreator();
 
+	void SetCheat(bool cheat);
+
+	bool GetCheat();
+
 	void IncreaseZombiePass();
 
 	int GetZombiePass();
@@ -162,6 +188,18 @@ public:
 	void IncreaseZombieDestroy();
 
 	int GetZombieDestroy();
+
+	void IncreasePlantEated();
+
+	int GetPlantEated();
+
+	void IncreasePlantCoin(int more);
+
+	int GetPlantCoin();
+
+	void IncreaseZombieCoin(int more);
+
+	int GetZombieCoin();
 
 };
 
@@ -178,7 +216,6 @@ inline T* Garden::GetEntity()
 	return nullptr;
 }
 
-//si modifier voir aussi la fonction constante
 template<typename T>
 inline std::vector<T*> Garden::GetAllEntity()
 {
@@ -208,7 +245,7 @@ template<typename T, typename A>
 inline std::vector<T*> Garden::GetAllTypeConvert(std::vector<A*> tabTypeA)
 {
 	std::vector<T*> allTypeT;
-	int lenght = tabTypeA.size();
+	int lenght = (int)tabTypeA.size();
 	for (int i = 0; i < lenght; ++i)
 	{
 		if (T* entityConvert = dynamic_cast<T*>(tabTypeA[i]))
@@ -255,18 +292,4 @@ inline bool Garden::VectorIsEmpty(std::vector<T*> tabTypeA)
 	return false;
 }
 
-template<typename T>
-inline std::vector<T*> Garden::AllEntityInline(int line)
-{
-	std::vector<T*> allEntityInLine;
-	std::vector<T*> allEntity = GetAllTypeConvert<T>(*mAllEntity);
-	int lenght = allEntity.size();
-	for (int i = 0; i < lenght; ++i)
-	{
-		if (allEntity[i]->GetPosition().y > line - HEIGHTLINE / 3 && allEntity[i]->GetPosition().y < line + HEIGHTLINE / 3)
-		{
-			allEntityInLine.push_back(allEntity[i]);
-		}
-	}
-	return allEntityInLine;
-}
+

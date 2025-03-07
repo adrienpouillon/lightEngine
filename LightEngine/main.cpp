@@ -30,6 +30,6 @@ void CreatSampleScene(GameManager* pInstance)
 
 void CreatGardenScene(GameManager* pInstance)
 {
-	pInstance->CreateWindow(1280, 720, "Plant Vs Zombie");
+	pInstance->CreateWindow(1920, 720, "Plant Vs Zombie");
 	pInstance->LaunchScene<Garden>();
 }

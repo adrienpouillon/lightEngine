@@ -1,11 +1,11 @@
 #pragma once
 #include "Entity.h"
+#include "Utils.h"
 #include "Alive.h"
 
 class Shot :public Entity, public Alive
 {
 protected:
-	int mType;
 
 public:
 
@@ -21,11 +21,9 @@ public:
 
 	void SetLife(int life);
 
-	void SetType(int type);
+	virtual void SetTag(int type);
 
 	void SetDirectionShot(sf::Vector2f pos);
-
-	virtual int GetType();
 
 };
 

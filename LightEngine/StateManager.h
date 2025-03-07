@@ -23,7 +23,7 @@ public:
 		//si vide de ball
 		Empty,
 		//si en tire
-		Shooting,
+		Actioning,
 		//si en rechargement
 		Reloading,
 		//si en deplacement
@@ -40,6 +40,7 @@ protected:
 	int mCapacity;
 	bool mCanShoot;
 	bool mCanReload;
+	bool mCanBoost;
 
 	bool mIsCollide;
 
@@ -54,11 +55,11 @@ protected:
 
 	int mTransition[StateCount][StateCount] =
 	{//a ajouter ... et duplication
-	//	Full,Loaded,Empty,Shooting,Reloading,Walking,Eating
+	//	Full,Loaded,Empty,Actioning,Reloading,Walking,Eating
 		{0,		0,		0,		1,		0,		1,		1 },//Full
 		{0,		0,		0,		1,		1,		1,		1 },//Loaded
 		{0,		0,		0,		0,		1,		1,		1 },//Empty
-		{0,		1,		1,		0,		0,		0,		0 },//Shooting
+		{0,		1,		1,		0,		0,		0,		0 },//Actioning
 		{1,		0,		0,		0,		0,		0,		0 },//Reloading
 		{0,		0,		0,		1,		1,		0,		1 },//Walking
 		{0,		0,		0,		0,		0,		1,		0 }//Eating
@@ -82,7 +83,7 @@ public:
 	virtual void IsFull();
 	virtual void IsLoaded();
 	virtual void IsEmpty();
-	virtual void IsShooting();
+	virtual void IsActioning();
 	virtual void IsReloading();
 	virtual void IsWalking();
 	virtual void IsEating();
@@ -91,11 +92,15 @@ public:
 
 	void Shoot(int tag);
 
+	void Boost(int tag);
+
 	void Reload();
 
 	void SuperReload();
 
 	virtual void OnShoot(int tag);
+
+	virtual void OnBoost(int tag);
 
 	void SetIsCollide(bool isCollide);
 
@@ -121,6 +126,10 @@ public:
 	void SetCanReload(bool canReload);
 
 	bool GetCanReload();
+
+	void SetCanBoost(bool canBoost);
+
+	bool GetCanBoost();
 
 	~StateManager();
 };

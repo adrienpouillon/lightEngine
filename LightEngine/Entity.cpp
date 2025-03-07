@@ -17,6 +17,8 @@ void Entity::Initialize(float radius, const sf::Color& color)
 	
 	mTarget.isSet = false;
 
+	SetTag(TYPENO);
+
 	OnInitialize();
 }
 
@@ -213,9 +215,4 @@ Scene* Entity::GetScene() const
 float Entity::GetDeltaTime() const
 {
 	return GameManager::Get()->GetDeltaTime();
-}
-
-int Entity::GetType()
-{
-	return TYPENO;
 }
