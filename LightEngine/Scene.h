@@ -38,6 +38,8 @@ public:
 
 	static int GenerateRandomNumber(int min, int max);
 
+	static sf::Vector2f MoreLess(sf::Vector2f min, sf::Vector2f max);
+
 	sf::Color ChooseColor(int index);
 
 	int GetWindowWidth() const;

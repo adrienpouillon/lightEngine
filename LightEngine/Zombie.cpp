@@ -17,18 +17,7 @@ void Zombie::OnCollision(Entity* other)
 {
 	if (other != nullptr)
 	{
-		if (other->GetTag() >= TYPEPLANT)
-		{
-			if (Plant* plant = Garden::GetTypeConvert<Plant*>(other))
-			{
-				//activer le mode eating
-				SetIsCollide(true);
-			}
-			else
-			{
-				Alive::LifeLessLess();
-			}
-		}
+		Collide(other);
 	}
 	else
 	{
@@ -37,6 +26,22 @@ void Zombie::OnCollision(Entity* other)
 		garden->IncreaseZombiePass();
 		garden->IncreaseZombieCoin(250);
 		garden->IncreasePlantCoin(-1);
+	}
+}
+
+void Zombie::Collide(Entity* other)
+{
+	if (other->GetTag() >= TYPEPLANT)
+	{
+		if (Plant* plant = Garden::GetTypeConvert<Plant*>(other))
+		{
+			//activer le mode eating
+			SetIsCollide(true);
+		}
+		else
+		{
+			Alive::LifeLessLess();
+		}
 	}
 }
 

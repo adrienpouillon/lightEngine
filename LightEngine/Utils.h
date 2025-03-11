@@ -9,6 +9,7 @@ class Shot;
 class Peat;
 class Torch;
 class Entity;
+class Mower;
 
 namespace Utils
 {
@@ -32,6 +33,12 @@ namespace LineUtils
 	template<typename T>
 	int LineLessEntity();
 	int LineLessEntity(int nbEntityInLineOne, int nbEntityInLineTwo, int nbEntityInLineThree);
+
+	template<typename T>
+	int LineMoreEmpty();
+	int LineMoreEmpty(int nbEntityInLineOne, int nbEntityInLineTwo, int nbEntityInLineThree);
+
+	int LineLessEntityAndMoreEmpty(int nbAllieInLineOne, int nbAllieInLineTwo, int nbAllieInLineThree, int nbEnemyInLineOne, int nbEnemyInLineTwo, int nbEnemyInLineThree);
 }
 
 namespace EUtils
@@ -61,6 +68,9 @@ namespace EUtils
 	template<typename T>
 	bool IsLineEmptyEntity(float itMePos);
 	template<typename T>
+	bool IsCollumEmptyEntity(float itMePos);
+
+	template<typename T>
 	bool IsZoneEmptyEntity(sf::Vector2f itMePos, float area);
 	template<typename T>
 	bool IsEntityInLine(float itMePos, float entityPos, Entity* entity);
@@ -85,7 +95,10 @@ namespace SUtils
 	void DecaleShot(Shot* shot, sf::Vector2f pos, float verticalDirection);
 }
 
-
+namespace MUtils
+{
+	std::vector<Mower*> AllMowerInline(int line);
+}
 
 namespace TypeUtils
 {
@@ -112,6 +125,12 @@ namespace LineUtils
 	inline int LineLessEntity()
 	{
 		return LineLessEntity(EUtils::NbEntityInLine<T>(LINEONE), EUtils::NbEntityInLine<T>(LINETWO), EUtils::NbEntityInLine<T>(LINETHREE));
+	}
+
+	template<typename T>
+	inline int LineMoreEmpty()
+	{
+		return LineMoreEmpty(EUtils::NbEntityInLine<T>(LINEONE), EUtils::NbEntityInLine<T>(LINETWO), EUtils::NbEntityInLine<T>(LINETHREE));
 	}
 }
 
@@ -142,6 +161,21 @@ namespace EUtils
 		for (auto it = (*allEntity).begin(); it != (*allEntity).end(); )
 		{
 			if (IsEntityInLine<T>(itMePos, (*it)->GetPosition().y, *it))
+			{
+				return false;
+			}
+			++it;
+		}
+		return true;
+	}
+
+	template<typename T>
+	inline bool IsCollumEmptyEntity(float itMePos)
+	{
+		std::list<Entity*>* allEntity = GameManager::Get()->GetTabEntity();
+		for (auto it = (*allEntity).begin(); it != (*allEntity).end(); )
+		{
+			if (IsEntityInLine<T>(itMePos, (*it)->GetPosition().x, *it))
 			{
 				return false;
 			}
@@ -205,7 +239,10 @@ namespace EUtils
 	}
 }
 
-
+namespace MUtils
+{
+	
+}
 
 /*template<typename T>
 inline bool IsEntityHaveTypeInLine(float itMePos, float entityPos, int type, int entityType)

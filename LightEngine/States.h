@@ -109,12 +109,17 @@ class WalkingState :public States
 {
 protected:
 	float mSpeed;
+	float mWalkingTime;
+	float mWalkingProgress;
 public:
-	WalkingState(float speed, StateManager* stateManager);
+
+	WalkingState(float speed, float walkingTime, StateManager* stateManager);
 
 	virtual void Start();
 
 	virtual void Update(float deltaTime);
+
+	void SetWalkingProgress(float walkingProgress);
 
 };
 

@@ -14,10 +14,14 @@ public:
 	virtual void OnUpdate();
 
 	virtual void ActionDead();
+	virtual void ActionDeadPlant();
+	virtual void ActionDeadZombie();
 
 	void SetDestroyTime(float destroyTime);
 
 	float GetDestroyTime();
+
+	void SetFallSun();
 	
 };
 

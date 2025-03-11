@@ -24,6 +24,11 @@ int Scene::GenerateRandomNumber(int min, int max)
 	return value;
 }
 
+sf::Vector2f Scene::MoreLess(sf::Vector2f min, sf::Vector2f max)
+{
+	return sf::Vector2f(GenerateRandomNumber(min.x, max.x), GenerateRandomNumber(min.y, max.y));
+}
+
 sf::Color Scene::ChooseColor(int index)
 {
 	switch (index)

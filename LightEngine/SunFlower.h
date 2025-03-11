@@ -22,7 +22,5 @@ public:
 
 	sf::Vector2f MoreLessWithRadius();
 
-	sf::Vector2f MoreLess(sf::Vector2f min, sf::Vector2f max);
-
 };
 

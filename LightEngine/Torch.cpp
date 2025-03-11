@@ -39,107 +39,52 @@ void Torch::ActionDead()
 void Torch::IaAction()
 {
 	if (mShot != nullptr) {
-		bool noPlantUp = EUtils::IsEmptyEntityInLineUp<Plant>(this);
-		bool noPlantDown = EUtils::IsEmptyEntityInLineDown<Plant>(this);
-		if (!EUtils::IsAlongLine(this)) {/*il y a un enemie*/
-			if (noPlantUp)
-			{
-				/*il y a un enemie sur notre ligne mais pas de plante au dessus*/
-				if (noPlantDown)
-				{
-					/*il y a un enemie sur notre ligne mais pas de plante au dessus et au dessous*/
-					EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION6, TAGACTION8);
+		if (GetCanBoost() || GetCanReload()){
+			bool noPlantUp = EUtils::IsEmptyEntityInLineUp<Plant>(this);
+			bool noPlantDown = EUtils::IsEmptyEntityInLineDown<Plant>(this);
+			if (!EUtils::IsAlongLine(this)) {/*il y a un enemie*/
+				if (noPlantUp){/*il y a un enemie sur notre ligne mais pas de plante au dessus*/
+					if (noPlantDown) {/*il y a un enemie sur notre ligne mais pas de plante au dessus et au dessous*/EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION6, TAGACTION8); }
+					else{/*il y a un enemie sur notre ligne mais pas de plante au dessus*/EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION6, TAGACTION7);}
+				}else{/*il y a un enemie sur notre ligne avec une plante au dessus*/
+					if (noPlantDown){/*il y a un enemie sur notre ligne mais pas de plante au dessous*/EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION5, TAGACTION8);}
+					else{/*il y a un enemie sur notre ligne avec une plante au dessus et au dessous*/EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION5, TAGACTION7);}
 				}
-				else
-				{
-					/*il y a un enemie sur notre ligne mais pas de plante au dessus*/
-					EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION6, TAGACTION7);
-				}
-			}
-			else
-			{
-				/*il y a un enemie sur notre ligne avec une plante au dessus*/
-				if (noPlantDown)
-				{
-					/*il y a un enemie sur notre ligne mais pas de plante au dessous*/
-					EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION5, TAGACTION8);
-				}
-				else
-				{
-					EnemyAlmost(TAGACTION2, TAGACTION1, TAGACTION5, TAGACTION7);
-				}
-			}
-		}
-		else
-		{
-			/*il y a pas d'enemie*/
-			if (noPlantUp)
-			{
-				/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus*/
-				if (noPlantDown)
-				{
-					/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus et au dessous*/
-					if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4))
-					{
-						/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
-						if (GetCanBoost()) {/*on peut booster*/
-							if (GetScene()->GenerateRandomNumber(0, 1) == 0) {/*booster dessus*/Boost(TAGACTION3); }
-							else {/*booster dessous*/Boost(TAGACTION4); }
+			}else{/*il y a pas d'enemie*/
+				if (noPlantUp){/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus*/
+					if (noPlantDown){/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus et au dessous*/
+						if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4)){/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
+							if (GetCanBoost()) {/*on peut booster*/
+								if (GetScene()->GenerateRandomNumber(0, 1) == 0) {/*booster dessus*/Boost(TAGACTION3); }
+								else {/*booster dessous*/Boost(TAGACTION4); }
+							}else if (GetCanReload()) {/*on peut recharger*/Reload(); }
 						}
-						else if (GetCanReload()) {/*on peut recharger*/Reload(); }
-					}
-				}
-				else
-				{
-					/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus*/
-					if (!EnemyInLineUpDown(TAGACTION3, TAGACTION4))
-					{
-						/*il y a pas d'enemie sur la ligne du dessus et du dessous*/
-						if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4))
-						{
-							/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
-							if (GetCanReload()) {/*on peut recharger*/Reload(); }
+					}else{/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus*/
+						if (!EnemyInLineUpDown(TAGACTION3, TAGACTION4)){/*il y a pas d'enemie sur la ligne du dessus et du dessous*/
+							if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4)){/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
+								if (GetCanReload()) {/*on peut recharger*/Reload(); }
+							}
 						}
 					}
-				}
-			}
-			else
-			{
-				/*il y a pas d'enemie sur notre ligne mais pas de plante au dessous*/
-				if (noPlantDown)
-				{
-					/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus et au dessous*/
-					if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4))
-					{
-						/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
-						if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4))
-						{
-							/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
-							if (GetCanReload()) {/*on peut recharger*/Reload(); }
+				}else{/*il y a pas d'enemie sur notre ligne mais pas de plante au dessous*/
+					if (noPlantDown){/*il y a pas d'enemie sur notre ligne mais pas de plante au dessus et au dessous*/
+						if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4)){/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
+							if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4)){/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
+								if (GetCanReload()) {/*on peut recharger*/Reload(); }
+							}
 						}
-					}
-				}
-				else
-				{
-					/*il y a pas d'enemie sur notre ligne*/
-					if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4))
-					{
-						/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
-						if (!EnemyInLineUpDown(TAGACTION3, TAGACTION4))
-						{
-							/*il y a pas d'enemie sur la ligne du dessus et du dessous*/
-							if (GetCanReload()) {/*on peut recharger*/Reload(); }
+					}else{/*il y a pas d'enemie sur notre ligne*/
+						if (!IsLineUpDownHaveDanger(TAGACTION3, TAGACTION4)){/*il y a un enemie pas proche sur la ligne du dessus et du dessous*/
+							if (!EnemyInLineUpDown(TAGACTION3, TAGACTION4)){/*il y a pas d'enemie sur la ligne du dessus et du dessous*/
+								if (GetCanReload()) {/*on peut recharger*/Reload(); }
+							}
 						}
 					}
 				}
 			}
 		}
 		mShot = nullptr;
-	}
-	else
-	{
-		if (GetCanReload()) {/*on peut recharger*/Reload(); }
-	}
+	}else{if (GetCanReload()) {/*on peut recharger*/Reload(); }}
 }
 
 void Torch::EnemyAlmost(int tagAlmost, int tagFar, int tagUp, int tagDown)

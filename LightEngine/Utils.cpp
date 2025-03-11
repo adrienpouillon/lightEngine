@@ -5,10 +5,13 @@
 #include "Shot.h"
 #include "Sun.h"
 #include "Zombie.h"
+#include "ZombieRa.h"
+#include "ZombieShot.h"
 #include "Peat.h"
 #include "Torch.h"
 #include "SunFlower.h"
 #include "Mower.h"
+#include "Saw.h"
 
 namespace Utils 
 {
@@ -108,6 +111,187 @@ namespace LineUtils
 		}
 		return -1;
 	}
+
+	int LineMoreEmpty(int nbEntityInLineOne, int nbEntityInLineTwo, int nbEntityInLineThree)
+	{
+		bool MostlineOne = nbEntityInLineOne > 0;
+		bool MostlineTwo = nbEntityInLineTwo > 0;
+		bool MostlineThree = nbEntityInLineThree > 0;
+
+		if (MostlineOne)
+		{
+			//line 1
+			if (MostlineTwo)
+			{
+				//line 1 et 2
+				if (MostlineThree)
+				{
+					//line 1 et 2 et 3
+					RandomLine(3, LINEONE, HEIGHTLINE);
+				}
+				else
+				{
+					//line 1 et 2
+					RandomLine(2, LINEONE, HEIGHTLINE);
+				}
+			}
+			else
+			{
+				//line 1
+				if (MostlineThree)
+				{
+					//line 1 et 3
+					RandomLine(2, LINEONE, HEIGHTLINE * 2);
+				}
+				else
+				{
+					//line 1
+					return LINEONE;
+				}
+			}
+		}
+		else if (MostlineTwo)
+		{
+			//line 2
+			if (MostlineThree)
+			{
+				//line 2 et 3
+				RandomLine(2, LINETWO, HEIGHTLINE);
+			}
+			else
+			{
+				//line 2
+				return LINETWO;
+			}
+		}
+		else if (MostlineThree)
+		{
+			//line 3
+			return LINETHREE;
+		}
+		return -1;
+	}
+
+	int LineLessEntityAndMoreEmpty(int nbAllieInLineOne, int nbAllieInLineTwo, int nbAllieInLineThree, int nbEnemyInLineOne, int nbEnemyInLineTwo, int nbEnemyInLineThree)
+	{
+		bool MostlineOne = nbEnemyInLineOne > 0;
+		bool MostlineTwo = nbEnemyInLineTwo > 0;
+		bool MostlineThree = nbEnemyInLineThree > 0;
+
+		if (MostlineOne)
+		{
+			//line 1
+			if (MostlineTwo)
+			{
+				//line 1 et 2
+				if (MostlineThree)
+				{
+					//line 1 et 2 et 3
+					bool MostOne = nbAllieInLineOne > nbAllieInLineTwo;
+					bool MostTwo = nbAllieInLineTwo > nbAllieInLineThree;
+					bool MostThree = nbAllieInLineThree > nbAllieInLineOne;
+
+					if (!MostOne && MostThree)
+					{
+						return LINEONE;
+					}
+					else if (!MostThree && MostTwo)
+					{
+						return LINETHREE;
+					}
+					else if (!MostTwo && MostOne)
+					{
+						return LINETWO;
+					}
+					else
+					{
+						RandomLine(3, LINEONE, HEIGHTLINE);
+					}
+				}
+				else
+				{
+					//line 1 et 2
+					bool MostOne = nbAllieInLineOne > nbAllieInLineTwo;
+					bool MostTwo = nbAllieInLineTwo > nbAllieInLineOne;
+
+					if (!MostOne)
+					{
+						return LINEONE;
+					}
+					else if (!MostTwo)
+					{
+						return LINETWO;
+					}
+					else
+					{
+						RandomLine(2, LINEONE, HEIGHTLINE);
+					}
+				}
+			}
+			else
+			{
+				//line 1
+				if (MostlineThree)
+				{
+					//line 1 et 3
+					bool MostOne = nbAllieInLineOne > nbAllieInLineThree;
+					bool MostThree = nbAllieInLineThree > nbAllieInLineOne;
+
+					if (!MostOne)
+					{
+						return LINEONE;
+					}
+					else if (!MostThree)
+					{
+						return LINETHREE;
+					}
+					else
+					{
+						RandomLine(2, LINEONE, HEIGHTLINE * 2);
+					}
+				}
+				else
+				{
+					//line 1
+					return LINEONE;
+				}
+			}
+		}
+		else if (MostlineTwo)
+		{
+			//line 2
+			if (MostlineThree)
+			{
+				//line 2 et 3
+				bool MostTwo = nbAllieInLineTwo > nbAllieInLineThree;
+				bool MostThree = nbAllieInLineThree > nbAllieInLineTwo;
+
+				if (!MostTwo)
+				{
+					return LINETWO;
+				}
+				else if (!MostThree)
+				{
+					return LINETHREE;
+				}
+				else
+				{
+					RandomLine(2, LINETWO, HEIGHTLINE);
+				}
+			}
+			else
+			{
+				//line 2
+				return LINETWO;
+			}
+		}
+		else if (MostlineThree)
+		{
+			//line 3
+			return LINETHREE;
+		}
+		return -1;
+	}
 }
 
 namespace EUtils
@@ -192,7 +376,6 @@ namespace EUtils
 		}
 		return false;
 	}
-
 }
 
 namespace PUtils
@@ -210,6 +393,25 @@ namespace SUtils
 	void DecaleShot(Shot* shot, sf::Vector2f pos, float verticalDirection)
 	{
 		shot->SetDirectionShot(sf::Vector2f(pos.x, pos.y + verticalDirection * 2));
+	}
+}
+
+namespace MUtils
+{
+	std::vector<Mower*> AllMowerInline(int line)
+	{
+		std::vector<Mower*> allMowerInLine;
+		sf::Vector2i size = GameManager::Get()->GetWindowSize();
+		std::vector<Mower*> allMower = EUtils::AllEntityInline<Mower>(line);
+		int lenght = allMower.size();
+		for (int i = 0; i < lenght; ++i)
+		{
+			if (allMower[i]->GetPosition().x > STARTAREACREATMOWER - 100 && allMower[i]->GetPosition().x < size.x)
+			{
+				allMowerInLine.push_back(allMower[i]);
+			}
+		}
+		return allMowerInLine;
 	}
 }
 

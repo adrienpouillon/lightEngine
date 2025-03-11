@@ -18,7 +18,8 @@
 #define TYPEZOMBIECONE TYPEZOMBIENORMAL - 1
 #define TYPEZOMBIESPORT TYPEZOMBIECONE - 1
 #define TYPEZOMBIERA TYPEZOMBIESPORT - 1
-#define TYPEZOMBIESHELD TYPEZOMBIERA - 1
+#define TYPEZOMBIESHOT TYPEZOMBIERA - 1
+#define TYPEZOMBIESHELD TYPEZOMBIESHOT -1
 
 #define NOSPEED sf::Vector2f(0,0)
 
@@ -36,6 +37,7 @@ class Entity
     {
 		sf::Vector2i position;
         float distance;
+		bool isPrint;
 		bool isSet;
     };
 
@@ -51,6 +53,8 @@ protected:
 public:
 	bool GoToDirection(int x, int y, float speed = -1.f);
     bool GoToPosition(int x, int y, float speed = -1.f);
+	bool GoToPosition(int x, int y, float speed, bool isPrint);
+	bool GoToPoint(int x, int y, float speed);
     void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
 	void SetDirection(float x, float y, float speed = -1.f);
 	sf::Vector2f GetDirection();
@@ -66,6 +70,8 @@ public:
 	virtual void SetTag(int tag) { mTag = tag; }
 	virtual bool IsTag(int tag) const { return mTag == tag; }
 	virtual int GetTag() { return mTag; }
+
+	bool GetTargetIsSet(){return mTarget.isSet;}
 
 	//if entity collide with other
 	//this fonction call OnCollision with entity* other

@@ -74,8 +74,9 @@ bool Entity::IsInside(float x, float y) const
 void Entity::OutWindow(sf::Vector2f extentionLeftWindow, sf::Vector2f extentionRightWindow)
 {
 	sf::Vector2f pos = mShape.getPosition();
-	if (pos.x < 0 - extentionLeftWindow.x || pos.x > GameManager::Get()->GetWindowSize().x + extentionRightWindow.x
-	 || pos.y < 0 - extentionLeftWindow.y || pos.y > GameManager::Get()->GetWindowSize().y + extentionRightWindow.y)
+	sf::Vector2i size = GameManager::Get()->GetWindowSize();
+	if (pos.x < 0 - extentionLeftWindow.x || pos.x > size.x + extentionRightWindow.x
+	 || pos.y < 0 - extentionLeftWindow.y || pos.y > size.y + extentionRightWindow.y)
 	{
 		OnCollision(nullptr);
 	}
@@ -84,8 +85,9 @@ void Entity::OutWindow(sf::Vector2f extentionLeftWindow, sf::Vector2f extentionR
 void Entity::OutWindow(float extentionLeftWindow, float extentionRightWindow)
 {
 	sf::Vector2f pos = mShape.getPosition();
-	if (pos.x < 0 - extentionLeftWindow || pos.x > GameManager::Get()->GetWindowSize().x + extentionRightWindow
-	 || pos.y < 0 - extentionLeftWindow || pos.y > GameManager::Get()->GetWindowSize().y + extentionRightWindow)
+	sf::Vector2i size = GameManager::Get()->GetWindowSize();
+	if (pos.x < 0 - extentionLeftWindow || pos.x > size.x + extentionRightWindow
+	 || pos.y < 0 - extentionLeftWindow || pos.y > size.y + extentionRightWindow)
 	{
 		OnCollision(nullptr);
 	}
@@ -151,6 +153,22 @@ bool Entity::GoToPosition(int x, int y, float speed)
 
 	mTarget.position = { x, y };
 	mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
+	mTarget.isPrint = true;
+	mTarget.isSet = true;
+
+	return true;
+}
+
+bool Entity::GoToPosition(int x, int y, float speed, bool isPrint)
+{
+	if (GoToDirection(x, y, speed) == false)
+		return false;
+
+	sf::Vector2f position = GetPosition(0.5f, 0.5f);
+
+	mTarget.position = { x, y };
+	mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
+	mTarget.isPrint = isPrint;
 	mTarget.isSet = true;
 
 	return true;
@@ -184,15 +202,18 @@ void Entity::Update()
 
 	if (mTarget.isSet) 
 	{
-		float x1 = GetPosition(0.5f, 0.5f).x;
-		float y1 = GetPosition(0.5f, 0.5f).y;
+		if (mTarget.isPrint)
+		{
+			float x1 = GetPosition(0.5f, 0.5f).x;
+			float y1 = GetPosition(0.5f, 0.5f).y;
 
-		float x2 = x1 + mDirection.x * mTarget.distance;
-		float y2 = y1 + mDirection.y * mTarget.distance;
+			float x2 = x1 + mDirection.x * mTarget.distance;
+			float y2 = y1 + mDirection.y * mTarget.distance;
 
-		Debug::DrawLine(x1, y1, x2, y2, sf::Color::Cyan);
+			Debug::DrawLine(x1, y1, x2, y2, sf::Color::Cyan);
 
-		Debug::DrawCircle(mTarget.position.x, mTarget.position.y, 5.f, sf::Color::Magenta);
+			Debug::DrawCircle(mTarget.position.x, mTarget.position.y, 5.f, sf::Color::Magenta);
+		}
 
 		mTarget.distance -= distance;
 

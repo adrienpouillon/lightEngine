@@ -17,26 +17,38 @@
 #define BETEWEENPLANT 150
 #define NBPLANT 10
 #define ENDAREACREATPLANT STARTAREACREATPLANT + (BETEWEENPLANT * NBPLANT)
+#define STARTAREACREATMOWER STARTAREACREATPLANT - 112
+#define STARTAREACREATSAW STARTAREACREATPLANT + (BETEWEENPLANT/2)
+#define ENDAREACREATSAW STARTAREACREATSAW + (BETEWEENPLANT * (NBPLANT - 1))
 
 
 #define LIFEPLANT 3
 #define LIFESHOT 3
 #define LIFESHOTROC 3
+#define LIFESAW 100
 #define LIFEZOMBIE 3
 #define LIFEZOMBIECONE 3
 #define LIFEZOMBIESPORT 3
+#define LIFEZOMBIERA 3
+#define LIFEZOMBIESHOT 3
 
 #define COSTZOMBIENORMAL 25 - 1
 #define COSTZOMBIECONE 50 - 1
 #define COSTZOMBIESPORT 12 - 1
+#define COSTZOMBIERA 150 - 1
+#define COSTZOMBIESHOT 200 - 1
+#define COSTZOMBIEBIG 200 - 1
+#define COSTZOMBIECONEBIG 400 - 1
 #define COSTPLANTPEAT 100 - 1
-#define COSTPLANTTORCH 100 - 1
+#define COSTPLANTTORCH 200 - 1
 #define COSTPLANTSUNFLOWER 200 - 1
-#define COSTPLANTMOWER 300 - 1
+#define COSTPLANTMOWER 250 - 1
+#define COSTPLANTSAW 250 - 1
 
 #define COSTPLANTMINI 100
 
 #define SPEEDZOMBIE 20.f
+#define SPEEDSAW 40.f
 
 #define CREATESLEEP 0
 #define CREATEMICRO CREATESLEEP + 1
@@ -91,22 +103,29 @@ public:
 
 	void CreatShot(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int life, int type, float verticalDirection);
 	void CreatSun(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int type);
+	void CreatSun(float radius, sf::Color color, sf::Vector2f pos, bool rigidBody, int type, sf::Vector2f nextPos, float speed);
 	void CreatZombie(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
 	void CreatZombieCone(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
 	void CreatZombieSport(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
+	void CreatZombieRa(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
+	void CreatZombieShot(float radius, sf::Vector2f pos, bool rigidBody, int life, float speed);
 	void CreatPeat(float radius, sf::Vector2f pos, bool rigidBody, int life);
 	void CreatTorch(float radius, sf::Vector2f pos, bool rigidBody, int life);
 	void CreatSunFlower(float radius, sf::Vector2f pos, bool rigidBody, int life);
 	void CreatMower(float radius, sf::Vector2f pos, bool rigidBody);
+	void CreatSaw(float radius, sf::Vector2f pos, bool rigidBody, int life);
 
 	void OnEvent(const sf::Event& event);
 	void OnEventMouse(const sf::Event& event);
 	void OnEventKeyboard(const sf::Event& event);
+	int CreatPlantOrZombie(int costZombie, int costPlant);
 
 	void OnUpdate();
 
 	void DrawPlant();
 	void DrawZombie();
+
+	void FallSun(int probability);
 
 	bool TryToErase(Entity* pEntity, float x, float y);
 	bool TryCollect(Entity* pEntity, float x, float y);
@@ -121,6 +140,8 @@ public:
 	void InstanceShotRoc(Entity* itsCreator, float verticalDirection, sf::Vector2f pos, float radiusShot);
 	void InstanceSun(sf::Vector2f pos){CreatSun(SUNRADIUS, sf::Color::Yellow, pos, false, TYPESUN);}
 	void InstanceSunDouble(sf::Vector2f pos){CreatSun(SUNRADIUS * 2, sf::Color::Yellow, pos, false, TYPESUN);}
+	void InstanceSun(sf::Vector2f pos, sf::Vector2f nextPos) { CreatSun(SUNRADIUS, sf::Color::Yellow, pos, false, TYPESUN, nextPos, 100.f); }
+	void InstanceSunDouble(sf::Vector2f pos, sf::Vector2f nextPos) { CreatSun(SUNRADIUS * 2, sf::Color::Yellow, pos, false, TYPESUN, nextPos, 100.f); }
 
 	void CountWave();
 
@@ -128,9 +149,11 @@ public:
 	void CreatNewTorch(float radius, bool rigidBody, int life, int line);
 	void CreatNewSunFlower(float radius, bool rigidBody, int life, int line);
 	void CreatNewMower(float radius, bool rigidBody, int line);
+	void CreatNewSaw(float radius, bool rigidBody, int life, int posX);
 
 	void IaActionPlantCreat();
 	void IACreatPeatTorch(int nbPlant, int line);
+	void IACreatMower(int line);
 	void IaActionZombie();
 
 	void CreatZombieInLineWithNbZombie(int nbLine, int firstLine, int betweenLine);
@@ -142,7 +165,7 @@ public:
 
 	float GetTimeCreat();
 
-	bool GetIaZOMBIE();
+	bool GetIaZombie();
 
 	bool GetIaPlant();
 

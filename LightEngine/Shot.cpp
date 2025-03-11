@@ -69,7 +69,6 @@ void Shot::InsertInLine()
 
 void Shot::ActionDead()
 {
-
 	Destroy();
 }
 

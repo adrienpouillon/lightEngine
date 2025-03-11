@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+
 #include "Utils.h"
 #include "Alive.h"
 #include "StateManager.h"
@@ -13,6 +14,8 @@ public:
 	void OnInitialize();
 
 	virtual void OnCollision(Entity* other);
+
+	virtual void Collide(Entity* other);
 
 	virtual void OnUpdate();
 

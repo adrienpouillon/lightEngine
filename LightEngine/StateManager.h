@@ -7,7 +7,7 @@
 #define NOUSE 0 
 #define SHOOTINGUSE NOUSE + 1
 #define WALKINGUSE SHOOTINGUSE + 1
-#define SHOOTTINGWALKINGUSE WALKINGUSE + 1
+#define SHOOTINGWALKINGUSE WALKINGUSE + 1
 
 class States;
 
@@ -56,9 +56,9 @@ protected:
 	int mTransition[StateCount][StateCount] =
 	{//a ajouter ... et duplication
 	//	Full,Loaded,Empty,Actioning,Reloading,Walking,Eating
-		{0,		0,		0,		1,		0,		1,		1 },//Full
-		{0,		0,		0,		1,		1,		1,		1 },//Loaded
-		{0,		0,		0,		0,		1,		1,		1 },//Empty
+		{0,		0,		0,		1,		0,		1,		0 },//Full
+		{0,		0,		0,		1,		1,		1,		0 },//Loaded
+		{0,		0,		0,		0,		1,		1,		0 },//Empty
 		{0,		1,		1,		0,		0,		0,		0 },//Actioning
 		{1,		0,		0,		0,		0,		0,		0 },//Reloading
 		{0,		0,		0,		1,		1,		0,		1 },//Walking
@@ -69,8 +69,7 @@ public:
 	StateManager();
 
 	void InitBase(Entity* id);
-
-	void Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, State startState);
+	void Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, float walkingTime, int modeUse, State startState);
 
 	void OnUpdate(float deltaTime);
 
@@ -79,6 +78,7 @@ public:
 	void Start();
 
 	bool TransitionTo(State newState);
+	bool TryTransition(State newState);
 
 	virtual void IsFull();
 	virtual void IsLoaded();
@@ -130,6 +130,8 @@ public:
 	void SetCanBoost(bool canBoost);
 
 	bool GetCanBoost();
+
+	std::vector<States*>* GetAllState();
 
 	~StateManager();
 };

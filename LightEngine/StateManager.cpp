@@ -11,7 +11,7 @@ void StateManager::InitBase(Entity* id)
 	mThis = id;
 }
 
-void StateManager::Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, int modeUse, State startState)
+void StateManager::Init(int capacity, float speed, float reloadTime, float shootTime, float idletime, float walkingTime, int modeUse, State startState)
 {
 	//mode use
 	//modeUse = NOUSE = 0 -> rien
@@ -23,7 +23,7 @@ void StateManager::Init(int capacity, float speed, float reloadTime, float shoot
 
 	mCanShoot = false;
 	mCanReload = false;
-	if (modeUse == SHOOTINGUSE || modeUse == SHOOTTINGWALKINGUSE)
+	if (modeUse == SHOOTINGUSE || modeUse == SHOOTINGWALKINGUSE)
 	{
 		mAllState.push_back(new FullState(idletime, this));
 		mAllState.push_back(new LoadedState(idletime, this));
@@ -46,9 +46,9 @@ void StateManager::Init(int capacity, float speed, float reloadTime, float shoot
 		mAmmo = mCapacity;
 	}
 
-	if (modeUse == WALKINGUSE || modeUse == SHOOTTINGWALKINGUSE)
+	if (modeUse == WALKINGUSE || modeUse == SHOOTINGWALKINGUSE)
 	{
-		mAllState.push_back(new WalkingState(speed, this));
+		mAllState.push_back(new WalkingState(speed, walkingTime, this));
 		mAllState.push_back(new EatingState(this));
 	}
 	else
@@ -187,10 +187,15 @@ void StateManager::Start()
 
 bool StateManager::TransitionTo(State newState)
 {
-	int currenteStateIndex = static_cast<int>(mState);
+	/*int currenteStateIndex = static_cast<int>(mState);
 	int newStateIndex = static_cast<int>(newState);
 
 	if (mTransition[currenteStateIndex][newStateIndex] == 0)
+	{
+		return false;
+	}*/
+
+	if (!TryTransition(newState))
 	{
 		return false;
 	}
@@ -198,6 +203,18 @@ bool StateManager::TransitionTo(State newState)
 	mState = newState;
 	Start();
 
+	return true;
+}
+
+bool StateManager::TryTransition(State newState)
+{
+	int currenteStateIndex = static_cast<int>(mState);
+	int newStateIndex = static_cast<int>(newState);
+
+	if (mTransition[currenteStateIndex][newStateIndex] == 0)
+	{
+		return false;
+	}
 	return true;
 }
 
@@ -399,6 +416,11 @@ void StateManager::SetCanBoost(bool canBoost)
 bool StateManager::GetCanBoost()
 {
 	return mCanBoost;
+}
+
+std::vector<States*>* StateManager::GetAllState()
+{
+	return &mAllState;
 }
 
 StateManager::~StateManager()

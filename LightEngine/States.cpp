@@ -33,6 +33,17 @@ void FullState::Update(float deltaTime)
 	{
 		mStateManager->SetCanShoot(true);
 		mStateManager->SetCanBoost(true);
+
+		if ((*mStateManager->GetAllState())[mStateManager->State::Walking] != nullptr)
+		{
+			if (mStateManager->TransitionTo(mStateManager->State::Walking))
+			{
+				if (WalkingState* walking = mStateManager->GetState<WalkingState>())
+				{
+					walking->Start();
+				}
+			}
+		}
 	}
 }
 
@@ -67,6 +78,17 @@ void LoadedState::Update(float deltaTime)
 		mStateManager->SetCanShoot(true);
 		mStateManager->SetCanBoost(true);
 		mStateManager->SetCanReload(true);
+
+		if ((*mStateManager->GetAllState())[mStateManager->State::Walking] != nullptr)
+		{
+			if (mStateManager->TransitionTo(mStateManager->State::Walking))
+			{
+				if (WalkingState* walking = mStateManager->GetState<WalkingState>())
+				{
+					walking->Start();
+				}
+			}
+		}
 	}
 }
 
@@ -99,6 +121,17 @@ void EmptyState::Update(float deltaTime)
 	if (mIdleProgress < 0.f)
 	{
 		mStateManager->SetCanReload(true);
+
+		if ((*mStateManager->GetAllState())[mStateManager->State::Walking] != nullptr)
+		{
+			if (mStateManager->TransitionTo(mStateManager->State::Walking))
+			{
+				if (WalkingState* walking = mStateManager->GetState<WalkingState>())
+				{
+					walking->Start();
+				}
+			}
+		}
 	}
 }
 
@@ -188,7 +221,7 @@ void ReloadingState::SetReloadProgress(float reloadProgress)
 
 
 
-WalkingState::WalkingState(float speed, StateManager* stateManager) : States(stateManager), mSpeed(speed)
+WalkingState::WalkingState(float speed, float walkingTime,  StateManager* stateManager) : States(stateManager), mSpeed(speed), mWalkingTime(walkingTime)
 {
 
 }
@@ -197,22 +230,42 @@ void WalkingState::Start()
 {
 	Entity* entity = mStateManager->GetThis();
 	entity->SetSpeed(mSpeed);
+	SetWalkingProgress(mWalkingTime);
 }
 
 void WalkingState::Update(float deltaTime)
 {
-	if (mStateManager->GetIsCollide() == true)
+	mWalkingProgress -= deltaTime;
+	if(mWalkingProgress < 0.f)
 	{
-		if (mStateManager->TransitionTo(mStateManager->State::Eating))
+		if ((*mStateManager->GetAllState())[mStateManager->State::Actioning] != nullptr)
 		{
-			Entity* entity = mStateManager->GetThis();
-			entity->SetSpeed(0.f);
-			if (EatingState* eating = mStateManager->GetState<EatingState>())
+			if(mStateManager->GetAmmo())
 			{
-				eating->Start();
+				mStateManager->SetCanShoot(true);
+				mStateManager->SetCanBoost(true);
+			}
+			mStateManager->SetCanReload(true);
+		}
+
+		if (mStateManager->GetIsCollide() == true)
+		{
+			if (mStateManager->TransitionTo(mStateManager->State::Eating))
+			{
+				Entity* entity = mStateManager->GetThis();
+				entity->SetSpeed(0.f);
+				if (EatingState* eating = mStateManager->GetState<EatingState>())
+				{
+					eating->Start();
+				}
 			}
 		}
 	}
+}
+
+void WalkingState::SetWalkingProgress(float walkingProgress)
+{
+	mWalkingProgress = walkingProgress;
 }
 
 

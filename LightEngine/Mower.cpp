@@ -10,9 +10,17 @@ void Mower::OnInitialize()
 
 void Mower::OnCollision(Entity* other)
 {
-	if (other->GetTag() <= TYPEZOMBIE)
+	if (other != nullptr)
 	{
-		mActivate = true;
+		if (other->GetTag() <= TYPEZOMBIE)
+		{
+			mActivate = true;
+		}
+	}
+	else
+	{
+		//sorti de l'ecran
+		Destroy();
 	}
 }
 

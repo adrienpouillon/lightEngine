@@ -68,6 +68,9 @@
     <ClCompile Include="Sun.cpp" />
     <ClCompile Include="Mower.cpp" />
     <ClCompile Include="Saw.cpp" />
+    <ClCompile Include="ZombieRa.cpp" />
+    <ClCompile Include="ZombieShot.cpp" />
+    <ClCompile Include="defineShot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -125,6 +128,9 @@
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Mower.h" />
     <ClInclude Include="Saw.h" />
+    <ClInclude Include="ZombieRa.h" />
+    <ClInclude Include="ZombieShot.h" />
+    <ClInclude Include="defineShot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scene.inl">
