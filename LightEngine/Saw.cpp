@@ -34,41 +34,42 @@ void Saw::IaAction()
 {
 	if (!mTarget.isSet)
 	{
-		bool entityFar = !EUtils::IsAreaEmpty(this, GetRadius() * 5);
-		bool entityFarUp = !EUtils::IsAreaEmptyUp(this, GetRadius() * 5);
-		bool entityFarDown = !EUtils::IsAreaEmptyDown(this, GetRadius() * 5);
+		float radius = GetRadius();
+		bool entityFar = !EUtils::IsAreaEmpty(this, radius * 5);
+		bool entityFarUp = !EUtils::IsAreaEmptyUp(this, radius * 5);
+		bool entityFarDown = !EUtils::IsAreaEmptyDown(this, radius * 5);
 
-		bool entityMiddle = !EUtils::IsAreaEmpty(this, GetRadius() * 20);
-		bool entityMiddleUp = !EUtils::IsAreaEmptyUp(this, GetRadius() * 20);
-		bool entityMiddleDown = !EUtils::IsAreaEmptyDown(this, GetRadius() * 20);
+		bool entityMiddle = !EUtils::IsAreaEmpty(this, radius * 20);
+		bool entityMiddleUp = !EUtils::IsAreaEmptyUp(this, radius * 20);
+		bool entityMiddleDown = !EUtils::IsAreaEmptyDown(this, radius * 20);
 
 		if (entityFar)
 		{
 			/*il y a un enemie proche sur notre ligne*/
-			if (entityFarUp)
-			{
+			//if (entityFarUp)
+			//{
 				/*il y a un enemie proche sur notre ligne et sur la ligne du dessus*/
-				if (entityFarDown)
-				{
+				//if (entityFarDown)
+				//{
 					/*il y a un enemie proche sur notre ligne et sur la ligne du dessus et la ligne du dessous*/
-				}
-				else
-				{
+				//}
+				//else
+				//{
 					/*il y a un enemie proche sur notre ligne et sur la ligne du dessus*/
-				}
-			}
-			else
-			{
+				//}
+			//}
+			//else
+			//{
 				/*il y a un enemie proche sur notre ligne*/
-				if (entityFarDown)
-				{
+				//if (entityFarDown)
+				//{
 					/*il y a un enemie proche sur notre ligne et la ligne du dessous*/
-				}
-				else
-				{
+				//}
+				//else
+				//{
 					/*il y a un enemie proche sur notre ligne*/
-				}
-			}
+				//}
+			//}
 		}
 		else
 		{
@@ -112,12 +113,107 @@ void Saw::IaAction()
 							if (entityMiddleDown)
 							{
 								/*il y a un enemie loin sur notre ligne et la ligne du dessus et la ligne du dessous*/
-
+								bool isBehindFront = false;
+								sf::Vector2f pos = GetPosition();
+								std::vector<Saw*> allSaw = EUtils::AllEntityInline<Saw>(pos.y);
+								int lenght = (int)allSaw.size();
+								for (int i = 0; i < lenght; ++i)
+								{
+									if (allSaw[i]->GetPosition().x > pos.x)
+									{
+										/*il y a une saw devant sur notre ligne*/
+										isBehindFront = true;
+									}
+								}
+								if (isBehindFront)
+								{
+									/*il y a une saw devant sur notre ligne*/
+									bool isBehindFrontUp = false;
+									sf::Vector2f posUp = GetPosition();
+									std::vector<Saw*> allSaw = EUtils::AllEntityInline<Saw>(posUp.y - HEIGHTLINE);
+									int lenght = (int)allSaw.size();
+									for (int i = 0; i < lenght; ++i)
+									{
+										if (allSaw[i]->GetPosition().x > posUp.x)
+										{
+											/*il y a une saw devant sur la ligne du dessus*/
+											isBehindFrontUp = true;
+										}
+									}
+									if (isBehindFrontUp)
+									{
+										/*il y a une saw devant sur notre ligne et la ligne du dessus*/
+										bool isBehindFrontDown = false;
+										sf::Vector2f posDown = GetPosition();
+										std::vector<Saw*> allSaw = EUtils::AllEntityInline<Saw>(posDown.y + HEIGHTLINE);
+										int lenght = (int)allSaw.size();
+										for (int i = 0; i < lenght; ++i)
+										{
+											if (allSaw[i]->GetPosition().x > posDown.x)
+											{
+												/*il y a une saw devant sur la ligne du dessous*/
+												isBehindFrontDown = true;
+											}
+										}
+										if (isBehindFrontDown)
+										{
+											/*il y a une saw devant sur notre ligne et la ligne du dessus et du dessous*/
+											/*donc rester ici*/
+										}
+										else
+										{
+											sf::Vector2f pos = GetPosition();
+											GoToPosition(pos.x, pos.y + HEIGHTLINE);
+										}
+									}
+									else
+									{
+										sf::Vector2f pos = GetPosition();
+										GoToPosition(pos.x, pos.y - HEIGHTLINE);
+									}
+								}
 							}
 							else
 							{
 								/*il y a un enemie loin sur notre ligne et la ligne du dessus*/
-
+								bool isBehindFront = false;
+								sf::Vector2f pos = GetPosition();
+								std::vector<Saw*> allSaw = EUtils::AllEntityInline<Saw>(pos.y);
+								int lenght = (int)allSaw.size();
+								for (int i = 0; i < lenght; ++i)
+								{
+									if (allSaw[i]->GetPosition().x > pos.x)
+									{
+										/*il y a une saw devant sur notre ligne*/
+										isBehindFront = true;
+									}
+								}
+								if (isBehindFront)
+								{
+									/*il y a une saw devant sur notre ligne*/
+									bool isBehindFrontUp = false;
+									sf::Vector2f posUp = GetPosition();
+									std::vector<Saw*> allSaw = EUtils::AllEntityInline<Saw>(posUp.y - HEIGHTLINE);
+									int lenght = (int)allSaw.size();
+									for (int i = 0; i < lenght; ++i)
+									{
+										if (allSaw[i]->GetPosition().x > posUp.x)
+										{
+											/*il y a une saw devant sur la ligne du dessus*/
+											isBehindFrontUp = true;
+										}
+									}
+									if (isBehindFrontUp)
+									{
+										/*il y a une saw devant sur notre ligne et la ligne du dessus*/
+										/*donc rester ici*/
+									}
+									else
+									{
+										sf::Vector2f pos = GetPosition();
+										GoToPosition(pos.x, pos.y - HEIGHTLINE);
+									}
+								}
 							}
 						}
 						else
@@ -126,7 +222,44 @@ void Saw::IaAction()
 							if (entityMiddleDown)
 							{
 								/*il y a un enemie loin sur notre ligne et la ligne du dessous*/
-
+								bool isBehindFront = false;
+								sf::Vector2f pos = GetPosition();
+								std::vector<Saw*> allSaw = EUtils::AllEntityInline<Saw>(pos.y);
+								int lenght = (int)allSaw.size();
+								for (int i = 0; i < lenght; ++i)
+								{
+									if (allSaw[i]->GetPosition().x > pos.x)
+									{
+										/*il y a une saw devant sur notre ligne*/
+										isBehindFront = true;
+									}
+								}
+								if (isBehindFront)
+								{
+									/*il y a une saw devant sur notre ligne*/
+									bool isBehindFrontDown = false;
+									sf::Vector2f posDown = GetPosition();
+									std::vector<Saw*> allSaw = EUtils::AllEntityInline<Saw>(posDown.y + HEIGHTLINE);
+									int lenght = (int)allSaw.size();
+									for (int i = 0; i < lenght; ++i)
+									{
+										if (allSaw[i]->GetPosition().x > posDown.x)
+										{
+											/*il y a une saw devant sur la ligne du dessous*/
+											isBehindFrontDown = true;
+										}
+									}
+									if (isBehindFrontDown)
+									{
+										/*il y a une saw devant sur notre ligne et la ligne du dessous*/
+										/*donc rester ici*/
+									}
+									else
+									{
+										sf::Vector2f pos = GetPosition();
+										GoToPosition(pos.x, pos.y + HEIGHTLINE);
+									}
+								}
 							}
 							else
 							{

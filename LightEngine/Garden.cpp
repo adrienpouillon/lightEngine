@@ -16,6 +16,8 @@
 void Garden::OnInitialize()
 {
 	mAllEntity = GameManager::Get()->GetTabEntity();
+	mEntitySelected = nullptr;
+
 	mModeCreator = MODEZOMBIE;
 	mIaZombie = false;
 	mIaPlant = true;
@@ -28,11 +30,10 @@ void Garden::OnInitialize()
 	mWave = -1;
 	mHaveZombieInGame = false;
 
-	mPlantCoin = 350;
+	mPlantCoin = 200;
 	mZombieCoin = 1000;
 	mZombiePass = 0;
 	mZombieDestroy = 0;
-
 
 	mMouse = CreateEntity<Mouse>(5, sf::Color::Red);
 
@@ -177,7 +178,7 @@ void Garden::OnEvent(const sf::Event& event)
 	if (event.type == sf::Event::EventType::KeyPressed)
 	{
 		OnEventKeyboard(event);
-		srand(NULL);
+		srand(GetDeltaTime() * 254862916);
 	}
 }
 
@@ -185,12 +186,28 @@ void Garden::OnEventMouse(const sf::Event& event)
 {
 	if (event.mouseButton.button == sf::Mouse::Button::Left)
 	{
-		if(mIaPlant)
+		bool execute = false;
+		for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
 		{
-			for (auto it = (*mAllEntity).begin(); it != (*mAllEntity).end(); )
+			TryShot(*it, (float)event.mouseButton.x, (float)event.mouseButton.y);
+			execute = true;
+
+			if (!(*it)->IsTag(TYPENO))
 			{
-				TryShot(*it, (float)event.mouseButton.x, (float)event.mouseButton.y);
-				++it;
+				if (TrySetSelectedEntity(*it, (float)event.mouseButton.x, (float)event.mouseButton.y))
+				{
+					execute = true;
+				}
+
+			}
+			++it;
+		}
+
+		if (!execute)
+		{
+			if (Saw* saw = GetTypeConvert<Saw*, Entity*>(mEntitySelected))
+			{
+				saw->GoToPosition(saw->GetPosition().x, (float)event.mouseButton.y);
 			}
 		}
 	}
@@ -389,7 +406,7 @@ void Garden::OnEventKeyboard(const sf::Event& event)
 		case 3:
 			//Plant creat + cost
 			CreatNewMower(ENTITYRADIUS, false, line);
-			IncreasePlantCoin(-(COSTPLANTPEAT + 1));
+			IncreasePlantCoin(-(COSTPLANTMOWER + 1));
 			break;
 		case 4:
 			//zombie creat
@@ -489,6 +506,7 @@ void Garden::OnUpdate()
 	if(mIaZombie)
 	{
 		IaActionZombie();
+		FallSun(300);
 	}
 	if (mIaPlantCreat)
 	{
@@ -503,8 +521,6 @@ void Garden::OnUpdate()
 	{
 		DrawPlant();
 	}
-
-	FallSun(300);
 
 	CountWave();
 }
@@ -593,6 +609,15 @@ void Garden::FallSun(int probability)
 	}
 }
 
+bool Garden::TrySetSelectedEntity(Entity* pEntity, int x, int y)
+{
+	if (pEntity->IsInside(x, y) == false)
+		return false;
+
+	mEntitySelected = pEntity;
+	return true;
+}
+
 bool Garden::TryToErase(Entity* pEntity, float x, float y)
 {
 	if (pEntity == mMouse)
@@ -628,31 +653,36 @@ bool Garden::TryShot(Entity* pEntity, float x, float y)
 {
 	if (pEntity == mMouse)
 		return false;
-	if (pEntity->IsInside(x, y) == false)
+	if (!pEntity->IsInside(x, y))
 		return false;
 
-	if(mIaPlant == false)
+	if(!mIaPlant)
 	{
 		if (Plant* plant = GetTypeConvert<Plant*>(pEntity))
 		{
-			if (plant->GetCanShoot()) {/*on peut tirer*/plant->Shoot(TAGACTION1); }
+			if (plant->GetCanShoot()) {/*on peut tirer*/plant->Shoot(TAGACTION2); }
+			else if (plant->GetCanBoost()) {/*on peut tirer*/plant->Shoot(TAGACTION1); }
 			else if (plant->GetCanReload()) {/*si peut super charger*/plant->Reload(); }
 			return true;
 		}
 	}
 
-	InstanceShot(pEntity, 0.f);
-	return true;
+	if(mIaPlantCreat)
+	{
+		InstanceShot(pEntity, 0.f);
+		return true;
+	}
+	return false;
 }
 
 bool Garden::TryShotRoc(Entity* pEntity, float x, float y)
 {
 	if (pEntity == mMouse)
 		return false;
-	if (pEntity->IsInside(x, y) == false)
+	if (!pEntity->IsInside(x, y))
 		return false;
 
-	if (mIaPlant == false)
+	if (!mIaPlant)
 	{
 		if (Plant* plant = GetTypeConvert<Plant*>(pEntity))
 		{
@@ -662,8 +692,12 @@ bool Garden::TryShotRoc(Entity* pEntity, float x, float y)
 		}
 	}
 
-	InstanceShotRoc(pEntity, 0.f);
-	return true;
+	if (mIaPlantCreat)
+	{
+		InstanceShotRoc(pEntity, 0.f);
+		return true;
+	}
+	return false;
 }
 
 void Garden::InstanceShot(Entity* itsCreator, float verticalDirection, sf::Vector2f pos, float radiusShot)
@@ -819,12 +853,14 @@ void Garden::IaActionPlantCreat()
 	if (nbPlant == NBPLANT)
 		return;
 
+
+
 	//la line a moins du maximun de plante
 	if (mPlantCoin > COSTPLANTSUNFLOWER)
 	{
 		if (nbPlant == 0)
 		{
-			//si pas de plante et ennemie cree une mower
+			//si pas de plante et il y a des ennemies cree une mower
 			if (!EUtils::IsLineEmptyEnemy(TYPEPLANT, line))
 			{
 				if(VectorIsEmpty(MUtils::AllMowerInline(line)))
@@ -835,10 +871,11 @@ void Garden::IaActionPlantCreat()
 			}
 		}
 
-		if (nbPlant > 5)
+		std::vector<SunFlower*> allSunFlower = EUtils::AllEntityInline<SunFlower>(line);
+		if (allSunFlower.size() < 3)
 		{
-			//si beaucoup plante et pas beaucoup de sunflower déraciner une plante et cree un sunflower
-			bool erase = false;
+			bool IsPlantPlace0 = false;
+			bool IsPlantPlace1 = false;
 			std::vector<Plant*> allPlant = EUtils::AllEntityInline<Plant>(line);
 			int lenght = allPlant.size();
 			for (int i = 0; i < lenght; ++i)
@@ -846,35 +883,20 @@ void Garden::IaActionPlantCreat()
 				sf::Vector2f pos = allPlant[i]->GetPosition();
 				if (pos.x == STARTAREACREATPLANT)
 				{
-					if (GetTypeConvert<SunFlower*>(allPlant[i]) == nullptr)
-					{
-						if (TryToErase(allPlant[i], STARTAREACREATPLANT, line));
-						{
-							CreatNewSunFlower(ENTITYRADIUS, false, LIFEPLANT, line);
-							IncreasePlantCoin(-(COSTPLANTSUNFLOWER + 1));
-							erase = true;
-							break;
-						}
-					}
+					IsPlantPlace0 = true;
 				}
-				else if(pos.x == STARTAREACREATPLANT + BETEWEENPLANT)
+				if(pos.x == STARTAREACREATPLANT + BETEWEENPLANT)
 				{
-					if (GetTypeConvert<SunFlower*>(allPlant[i]) == nullptr)
-					{
-						TryToErase(allPlant[i], STARTAREACREATPLANT, line);
-						CreatNewSunFlower(ENTITYRADIUS, false, LIFEPLANT, line);
-						IncreasePlantCoin(-(COSTPLANTSUNFLOWER + 1));
-						erase = true;
-						break;
-					}
+					IsPlantPlace1 = true;
 				}
 			}
 
-			if (!erase)
+			if(!IsPlantPlace0 || IsPlantPlace1)
 			{
-				IACreatPeatTorch(nbPlant, line);
+				CreatNewSunFlower(ENTITYRADIUS, false, LIFEPLANT, line);
+				IncreasePlantCoin(-(COSTPLANTSUNFLOWER + 1));
+				return;
 			}
-			return;
 		}
 
 		//sinon creer une plante en fonction du nombre
@@ -890,21 +912,23 @@ void Garden::IaActionPlantCreat()
 			IncreasePlantCoin(-(COSTPLANTPEAT + 1));
 			return;
 		}
-		else if (nbPlant > 7)
+		else if (nbPlant > 6)
 		{
-			if (!EUtils::IsLineEmptyEnemy(TYPEPLANT, line))
+			if (VectorIsEmpty(MUtils::AllMowerInline(line)))
 			{
-				if (VectorIsEmpty(MUtils::AllMowerInline(line)))
-				{
-					IACreatMower(line);
-					return;
-				}
+				IACreatMower(line);
+				return;
+			}
+			else
+			{
+				IACreatSaw();
 			}
 		}
 
 		//sinon
 		CreatNewTorch(ENTITYRADIUS, false, LIFEPLANT, line);
 		IncreasePlantCoin(-(COSTPLANTTORCH + 1));
+		return;
 	}
 	else if(nbPlant > 3)
 	{
@@ -914,6 +938,24 @@ void Garden::IaActionPlantCreat()
 			if (allSunFlower.size() > 2)
 			{
 				IACreatPeatTorch(nbPlant, line);
+			}
+			else
+			{
+				//si beaucoup plante et pas beaucoup de sunflower déraciner une plante
+				std::vector<Plant*> allPlant = EUtils::AllEntityInline<Plant>(line);
+				int lenght = allPlant.size();
+				for (int i = 0; i < lenght; ++i)
+				{
+					sf::Vector2f pos = allPlant[i]->GetPosition();
+					if (pos.x == STARTAREACREATPLANT || pos.x == STARTAREACREATPLANT + BETEWEENPLANT)
+					{
+						if (GetTypeConvert<SunFlower*>(allPlant[i]) == nullptr)
+						{
+							TryToErase(allPlant[i], STARTAREACREATPLANT, line);
+							break;
+						}
+					}
+				}
 			}
 		}
 		else
@@ -977,6 +1019,32 @@ void Garden::IACreatMower(int line)
 	}
 }
 
+void Garden::IACreatSaw()
+{
+	std::vector<Saw*> allSaw = GetAllEntity<Saw>();
+	int lenght = allSaw.size();
+	float pos[NBPLANT] = 
+	{ 
+		STARTAREACREATSAW + HEIGHTLINE * 3,
+		STARTAREACREATSAW + HEIGHTLINE * 4,
+		STARTAREACREATSAW + HEIGHTLINE * 5,
+		STARTAREACREATSAW + HEIGHTLINE * 2,
+		STARTAREACREATSAW + HEIGHTLINE,
+		STARTAREACREATSAW,
+		STARTAREACREATSAW + HEIGHTLINE * 6,
+		STARTAREACREATSAW + HEIGHTLINE * 7,
+		STARTAREACREATSAW + HEIGHTLINE * 8,
+		STARTAREACREATSAW + HEIGHTLINE * 10,
+	};
+	for (int i = 0; i < lenght; ++i)
+	{
+		if (allSaw[i]->GetPosition().x == pos[i])
+		{
+			CreatNewSaw(ENTITYRADIUS, false, LIFESAW, pos[i]);
+		}
+	}
+}
+
 void Garden::IaActionZombie()
 {
 	mTimeZombieCreatProgress -= GetDeltaTime();
@@ -987,7 +1055,7 @@ void Garden::IaActionZombie()
 		{
 			mDifficulty++;
 			mNbCreationZombie = 0;
-			mTimeZombieCreatProgress = 25.f + (float)mDifficulty * 5.f;
+			mTimeZombieCreatProgress = 40.f + (float)mDifficulty * 5.f;
 			return;
 		}
 
@@ -1072,6 +1140,10 @@ void Garden::CreatZombieInLineWithNbPlant(int line, float decalX)
 	{
 		//10 plante
 		CreatZombieCone(ENTITYRADIUS * 1.5f, sf::Vector2f(COLLUMZOMBIE + decalX, line), true, LIFEZOMBIE * 10, SPEEDZOMBIE / 2);
+		if (EUtils::AllEntityTag(TYPESUN).size() > 10)
+		{
+			CreatZombieRa(ENTITYRADIUS, sf::Vector2f(COLLUMZOMBIE + decalX + 5, line), true, LIFEZOMBIE, SPEEDZOMBIE);
+		}
 	}
 	if (nbPlant > 8)
 	{

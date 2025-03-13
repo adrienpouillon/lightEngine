@@ -3,7 +3,7 @@
 
 void Mouse::OnInitialize()
 {
-
+	SetTag(TYPENO);
 }
 
 void Mouse::OnUpdate()

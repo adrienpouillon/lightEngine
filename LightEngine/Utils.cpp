@@ -68,19 +68,13 @@ namespace LineUtils
 	int SeachLine(int y)
 	{
 		if (y > LINEONE - HEIGHTLINE / 2 && y < LINEONE + HEIGHTLINE / 2)
-		{
-			return LINEONE;
-		}
+		{return LINEONE;}
 
 		if (y > LINETWO - HEIGHTLINE / 2 && y < LINETWO + HEIGHTLINE / 2)
-		{
-			return LINETWO;
-		}
+		{return LINETWO;}
 
 		if (y > LINETHREE - HEIGHTLINE / 2 && y < LINETHREE + HEIGHTLINE / 2)
-		{
-			return LINETHREE;
-		}
+		{return LINETHREE;}
 
 		return LINEONE;
 	}
@@ -98,17 +92,11 @@ namespace LineUtils
 		bool MostlineThree = nbEntityInLineThree > nbEntityInLineOne;
 
 		if (!MostlineOne && MostlineThree)
-		{
-			return LINEONE;
-		}
+		{return LINEONE;}
 		else if (!MostlineThree && MostlineTwo)
-		{
-			return LINETHREE;
-		}
+		{return LINETHREE;}
 		else if (!MostlineTwo && MostlineOne)
-		{
-			return LINETWO;
-		}
+		{return LINETWO;}
 		return -1;
 	}
 
@@ -117,58 +105,18 @@ namespace LineUtils
 		bool MostlineOne = nbEntityInLineOne > 0;
 		bool MostlineTwo = nbEntityInLineTwo > 0;
 		bool MostlineThree = nbEntityInLineThree > 0;
-
-		if (MostlineOne)
-		{
-			//line 1
-			if (MostlineTwo)
-			{
-				//line 1 et 2
-				if (MostlineThree)
-				{
-					//line 1 et 2 et 3
-					RandomLine(3, LINEONE, HEIGHTLINE);
-				}
-				else
-				{
-					//line 1 et 2
-					RandomLine(2, LINEONE, HEIGHTLINE);
-				}
+		if (MostlineOne){/*line 1*/
+			if (MostlineTwo){/*line 1 et 2*/
+				if (MostlineThree){/*line 1 et 2 et 3*/RandomLine(3, LINEONE, HEIGHTLINE);}
+				else{/*line 1 et 2*/RandomLine(2, LINEONE, HEIGHTLINE); }
+			}else{/*line 1*/
+				if (MostlineThree){/*line 1 et 3*/RandomLine(2, LINEONE, HEIGHTLINE * 2); }
+				else{/*line 1*/return LINEONE;}
 			}
-			else
-			{
-				//line 1
-				if (MostlineThree)
-				{
-					//line 1 et 3
-					RandomLine(2, LINEONE, HEIGHTLINE * 2);
-				}
-				else
-				{
-					//line 1
-					return LINEONE;
-				}
-			}
-		}
-		else if (MostlineTwo)
-		{
-			//line 2
-			if (MostlineThree)
-			{
-				//line 2 et 3
-				RandomLine(2, LINETWO, HEIGHTLINE);
-			}
-			else
-			{
-				//line 2
-				return LINETWO;
-			}
-		}
-		else if (MostlineThree)
-		{
-			//line 3
-			return LINETHREE;
-		}
+		}else if (MostlineTwo){/*line 2*/
+			if (MostlineThree){/*line 2 et 3*/RandomLine(2, LINETWO, HEIGHTLINE);}
+			else{/*line 2*/return LINETWO;}
+		}else if (MostlineThree){/*line 3*/return LINETHREE; }
 		return -1;
 	}
 
@@ -177,139 +125,46 @@ namespace LineUtils
 		bool MostlineOne = nbEnemyInLineOne > 0;
 		bool MostlineTwo = nbEnemyInLineTwo > 0;
 		bool MostlineThree = nbEnemyInLineThree > 0;
-
-		if (MostlineOne)
-		{
-			//line 1
-			if (MostlineTwo)
-			{
-				//line 1 et 2
-				if (MostlineThree)
-				{
-					//line 1 et 2 et 3
+		if (MostlineOne){/*line 1*/
+			if (MostlineTwo){/*line 1 et 2*/
+				if (MostlineThree){/*line 1 et 2 et 3*/
 					bool MostOne = nbAllieInLineOne > nbAllieInLineTwo;
 					bool MostTwo = nbAllieInLineTwo > nbAllieInLineThree;
 					bool MostThree = nbAllieInLineThree > nbAllieInLineOne;
-
-					if (!MostOne && MostThree)
-					{
-						return LINEONE;
-					}
-					else if (!MostThree && MostTwo)
-					{
-						return LINETHREE;
-					}
-					else if (!MostTwo && MostOne)
-					{
-						return LINETWO;
-					}
-					else
-					{
-						RandomLine(3, LINEONE, HEIGHTLINE);
-					}
+					if (!MostOne && MostThree){return LINEONE;}
+					else if (!MostThree && MostTwo){return LINETHREE;}
+					else if (!MostTwo && MostOne){return LINETWO;}
+					else{RandomLine(3, LINEONE, HEIGHTLINE);}
+				}else{/*line 1 et 2*/bool MostOne = nbAllieInLineOne > nbAllieInLineTwo;bool MostTwo = nbAllieInLineTwo > nbAllieInLineOne;
+					if (!MostOne){return LINEONE;}
+					else if (!MostTwo){return LINETWO;}
+					else{RandomLine(2, LINEONE, HEIGHTLINE);}
 				}
-				else
-				{
-					//line 1 et 2
-					bool MostOne = nbAllieInLineOne > nbAllieInLineTwo;
-					bool MostTwo = nbAllieInLineTwo > nbAllieInLineOne;
-
-					if (!MostOne)
-					{
-						return LINEONE;
-					}
-					else if (!MostTwo)
-					{
-						return LINETWO;
-					}
-					else
-					{
-						RandomLine(2, LINEONE, HEIGHTLINE);
-					}
-				}
+			}else{/*line 1*/
+				if (MostlineThree){/*line 1 et 3*/bool MostOne = nbAllieInLineOne > nbAllieInLineThree;bool MostThree = nbAllieInLineThree > nbAllieInLineOne;
+					if (!MostOne){return LINEONE;}
+					else if (!MostThree){return LINETHREE;}
+					else{RandomLine(2, LINEONE, HEIGHTLINE * 2);}
+				}else{/*line 1*/return LINEONE;}
 			}
-			else
-			{
-				//line 1
-				if (MostlineThree)
-				{
-					//line 1 et 3
-					bool MostOne = nbAllieInLineOne > nbAllieInLineThree;
-					bool MostThree = nbAllieInLineThree > nbAllieInLineOne;
-
-					if (!MostOne)
-					{
-						return LINEONE;
-					}
-					else if (!MostThree)
-					{
-						return LINETHREE;
-					}
-					else
-					{
-						RandomLine(2, LINEONE, HEIGHTLINE * 2);
-					}
-				}
-				else
-				{
-					//line 1
-					return LINEONE;
-				}
-			}
-		}
-		else if (MostlineTwo)
-		{
-			//line 2
-			if (MostlineThree)
-			{
-				//line 2 et 3
-				bool MostTwo = nbAllieInLineTwo > nbAllieInLineThree;
-				bool MostThree = nbAllieInLineThree > nbAllieInLineTwo;
-
-				if (!MostTwo)
-				{
-					return LINETWO;
-				}
-				else if (!MostThree)
-				{
-					return LINETHREE;
-				}
-				else
-				{
-					RandomLine(2, LINETWO, HEIGHTLINE);
-				}
-			}
-			else
-			{
-				//line 2
-				return LINETWO;
-			}
-		}
-		else if (MostlineThree)
-		{
-			//line 3
-			return LINETHREE;
-		}
+		}else if (MostlineTwo){/*line 2*/
+			if (MostlineThree){/*line 2 et 3*/bool MostTwo = nbAllieInLineTwo > nbAllieInLineThree;bool MostThree = nbAllieInLineThree > nbAllieInLineTwo;
+				if (!MostTwo){return LINETWO;}
+				else if (!MostThree){return LINETHREE;}
+				else{RandomLine(2, LINETWO, HEIGHTLINE);}
+			}else{/*line 2*/return LINETWO;}
+		}else if (MostlineThree){/*line 3*/return LINETHREE; }
 		return -1;
 	}
 }
 
 namespace EUtils
 {
-	bool IsAlongLine(Entity* itMe)
-	{
-		return IsLineEmptyEnemy(itMe->GetTag(), itMe->GetPosition().y);
-	}
+	bool IsAlongLine(Entity* itMe){return IsLineEmptyEnemy(itMe->GetTag(), itMe->GetPosition().y);}
 
-	bool IsAlongLineUp(Entity* itMe)
-	{
-		return IsLineEmptyEnemy(itMe->GetTag(), itMe->GetPosition().y - HEIGHTLINE);
-	}
+	bool IsAlongLineUp(Entity* itMe){return IsLineEmptyEnemy(itMe->GetTag(), itMe->GetPosition().y - HEIGHTLINE);}
 
-	bool IsAlongLineDown(Entity* itMe)
-	{
-		return IsLineEmptyEnemy(itMe->GetTag(), itMe->GetPosition().y + HEIGHTLINE);
-	}
+	bool IsAlongLineDown(Entity* itMe){return IsLineEmptyEnemy(itMe->GetTag(), itMe->GetPosition().y + HEIGHTLINE);}
 
 	bool IsLineEmptyEnemy(int itMeType, float itMePos)
 	{
@@ -318,28 +173,17 @@ namespace EUtils
 		for (auto it = (*allEntity).begin(); it != (*allEntity).end(); )
 		{
 			if (IsEnemieInLine(itMePos, (*it)->GetPosition().y, itMeTypeGroupe, TypeUtils::TypeGroupe((*it)->GetTag())))
-			{
-				return false;
-			}
+			{return false;}
 			++it;
 		}
 		return true;
 	}
 
-	bool IsAreaEmpty(Entity* itMe, float area)
-	{
-		return IsZoneEmptyEnemy(itMe->GetTag(), itMe->GetPosition(), area);
-	}
+	bool IsAreaEmpty(Entity* itMe, float area){return IsZoneEmptyEnemy(itMe->GetTag(), itMe->GetPosition(), area);}
 
-	bool IsAreaEmptyUp(Entity* itMe, float area)
-	{
-		return IsZoneEmptyEnemy(itMe->GetTag(), itMe->GetPosition() - sf::Vector2f(0, HEIGHTLINE), area);
-	}
+	bool IsAreaEmptyUp(Entity* itMe, float area){return IsZoneEmptyEnemy(itMe->GetTag(), itMe->GetPosition() - sf::Vector2f(0, HEIGHTLINE), area);}
 
-	bool IsAreaEmptyDown(Entity* itMe, float area)
-	{
-		return IsZoneEmptyEnemy(itMe->GetTag(), itMe->GetPosition() + sf::Vector2f(0, HEIGHTLINE), area);
-	}
+	bool IsAreaEmptyDown(Entity* itMe, float area){return IsZoneEmptyEnemy(itMe->GetTag(), itMe->GetPosition() + sf::Vector2f(0, HEIGHTLINE), area);}
 
 	bool IsZoneEmptyEnemy(int itMeType, sf::Vector2f itMePos, float area)
 	{
@@ -350,9 +194,7 @@ namespace EUtils
 			if (IsEnemieInLine(itMePos.y, (*it)->GetPosition().y, itMeTypeGroupe, TypeUtils::TypeGroupe((*it)->GetTag())))//(itMePos.y == (*it)->GetPosition().y)(itMe->GetType() != (*it)->GetType())
 			{
 				if (itMePos.x + area > (*it)->GetPosition().x && itMePos.x - area < (*it)->GetPosition().x)
-				{
-					return false;
-				}
+				{return false;}
 			}
 			++it;
 		}
@@ -363,7 +205,13 @@ namespace EUtils
 	{
 		if (itMePos == entityPos)
 		{
-			if (itMeType != entityType) { return true; }
+			if (entityType != TYPENO)
+			{
+				if (itMeType != entityType) 
+				{ 
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -371,10 +219,23 @@ namespace EUtils
 	bool IsAllieInLine(float itMePos, float entityPos, int itMeType, int entityType)
 	{
 		if (itMePos == entityPos)
-		{
-			if (itMeType == entityType) { return true; }
-		}
+		{if (itMeType == entityType) { return true; }}
 		return false;
+	}
+
+	std::vector<Entity*> AllEntityTag(int type)
+	{
+		std::vector<Entity*> allT;
+		std::list<Entity*>* allEntity = GameManager::Get()->GetTabEntity();
+		for (auto it = (*allEntity).begin(); it != (*allEntity).end(); )
+		{
+			if ((*it)->IsTag(type))
+			{
+				allT.push_back(*it);
+			}
+			++it;
+		}
+		return allT;
 	}
 }
 
@@ -391,9 +252,7 @@ namespace ZUtils
 namespace SUtils
 {
 	void DecaleShot(Shot* shot, sf::Vector2f pos, float verticalDirection)
-	{
-		shot->SetDirectionShot(sf::Vector2f(pos.x, pos.y + verticalDirection * 2));
-	}
+	{shot->SetDirectionShot(sf::Vector2f(pos.x, pos.y + verticalDirection * 2));}
 }
 
 namespace MUtils
@@ -407,9 +266,7 @@ namespace MUtils
 		for (int i = 0; i < lenght; ++i)
 		{
 			if (allMower[i]->GetPosition().x > STARTAREACREATMOWER - 100 && allMower[i]->GetPosition().x < size.x)
-			{
-				allMowerInLine.push_back(allMower[i]);
-			}
+			{allMowerInLine.push_back(allMower[i]);}
 		}
 		return allMowerInLine;
 	}

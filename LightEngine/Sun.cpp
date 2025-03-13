@@ -52,7 +52,14 @@ void Sun::ActionDeadPlant()
 {
 	Garden* garden = GetScene<Garden>();
 	float coef = (float)GetRadius() / (float)SUNRADIUS;
-	garden->IncreasePlantCoin((int)(3.562f * coef * coef) + 1);
+	if(coef == 1)
+	{
+		garden->IncreasePlantCoin((int)(3.562f) + 1);
+	}
+	else
+	{
+		garden->IncreasePlantCoin((int)(3.562f * coef * coef * coef * coef) + 1);
+	}
 	Destroy();
 }
 

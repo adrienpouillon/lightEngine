@@ -64,9 +64,9 @@
 #define TIMECREATELOW 1.5f
 #define TIMECREATENORMAL 0.8f
 #define TIMECREATEFAST 0.6f
-#define TIMECREATEAPPOCALYPSE 0.4f
-#define TIMECREATEINFINITY 0.3f
-#define TIMECREATENOSTOP 2.f
+#define TIMECREATEAPPOCALYPSE 0.3f
+#define TIMECREATEINFINITY 0.25f
+#define TIMECREATENOSTOP 0.2f
 
 #define MODEZOMBIE 0
 #define MODEPLANT MODEZOMBIE + 1
@@ -98,6 +98,7 @@ protected:
 	bool mHaveZombieInGame;
 	int mPlantCoin;
 	int mZombieCoin;
+	Entity* mEntitySelected;
 public:
 	void OnInitialize();
 
@@ -127,10 +128,12 @@ public:
 
 	void FallSun(int probability);
 
+	bool TrySetSelectedEntity(Entity* pEntity, int x, int y);
 	bool TryToErase(Entity* pEntity, float x, float y);
 	bool TryCollect(Entity* pEntity, float x, float y);
 	bool TryShot(Entity* pEntity, float x, float y);
 	bool TryShotRoc(Entity* pEntity, float x, float y);
+
 
 	void InstanceShot(Entity* itsCreator, float verticalDirection){InstanceShot(itsCreator, verticalDirection, itsCreator->GetPosition());}
 	void InstanceShotRoc(Entity* itsCreator, float verticalDirection){InstanceShotRoc(itsCreator, verticalDirection, itsCreator->GetPosition());}
@@ -154,8 +157,9 @@ public:
 	void IaActionPlantCreat();
 	void IACreatPeatTorch(int nbPlant, int line);
 	void IACreatMower(int line);
-	void IaActionZombie();
+	void IACreatSaw();
 
+	void IaActionZombie();
 	void CreatZombieInLineWithNbZombie(int nbLine, int firstLine, int betweenLine);
 	void CreatZombieInLineWithNbPlant(int line, float decalX);
 

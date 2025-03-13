@@ -58,6 +58,8 @@ namespace EUtils
 	bool IsEnemieInLine(float itMePos, float entityPos, int itMeType, int entityType);
 	bool IsAllieInLine(float itMePos, float entityPos, int itMeType, int entityType);
 
+	std::vector<Entity*> AllEntityTag(int type);
+
 	template<typename T>
 	bool IsEmptyEntityInLine(Entity* itMe);
 	template<typename T>
