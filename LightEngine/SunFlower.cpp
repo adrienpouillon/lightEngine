@@ -15,17 +15,6 @@ void SunFlower::OnCollision(Entity* other)
 	{
 		Alive::LifeLessLess();
 	}
-	/*if (Garden::GetTypeConvert<Zombie*>(other))
-	{
-		Alive::LifeLessLess();
-	}
-	else if (Shot* shot = Garden::GetTypeConvert<Shot*>(other))
-	{
-		if (shot->GetType() <= TYPEZOMBIE)
-		{
-			Alive::LifeLessLess();
-		}
-	}*/
 	SetIsCollide(true);
 }
 

@@ -32,18 +32,20 @@
 #define LIFEZOMBIERA 3
 #define LIFEZOMBIESHOT 3
 
-#define COSTZOMBIENORMAL 25 - 1
-#define COSTZOMBIECONE 50 - 1
-#define COSTZOMBIESPORT 12 - 1
-#define COSTZOMBIERA 150 - 1
-#define COSTZOMBIESHOT 200 - 1
-#define COSTZOMBIEBIG 200 - 1
-#define COSTZOMBIECONEBIG 400 - 1
-#define COSTPLANTPEAT 100 - 1
-#define COSTPLANTTORCH 200 - 1
-#define COSTPLANTSUNFLOWER 200 - 1
-#define COSTPLANTMOWER 250 - 1
-#define COSTPLANTSAW 250 - 1
+#define COSTSHOT (4 - 1)
+#define COSTZOMBIENORMAL (25 - 1)
+#define COSTZOMBIECONE (50 - 1)
+#define COSTZOMBIESPORT (12 - 1)
+#define COSTZOMBIERA (150 - 1)
+#define COSTZOMBIESHOT (200 - 1)
+#define COSTZOMBIEBIG (200 - 1)
+#define COSTZOMBIECONEBIG (400 - 1)
+#define COSTPLANTPEAT (100 - 1)
+#define COSTPLANTTORCH (200 - 1)
+#define COSTPLANTSUNFLOWER (200 - 1)
+#define COSTPLANTMOWER (250 - 1)
+#define COSTPLANTSAW (250 - 1)
+#define COSTPLANTCRISTALLIGHT (100 - 1)
 
 #define COSTPLANTMINI 100
 
@@ -62,11 +64,11 @@
 #define TIMECREATENO 100.f
 #define TIMECREATEMICRO 2.f
 #define TIMECREATELOW 1.5f
-#define TIMECREATENORMAL 0.8f
-#define TIMECREATEFAST 0.6f
-#define TIMECREATEAPPOCALYPSE 0.3f
+#define TIMECREATENORMAL 1.f
+#define TIMECREATEFAST 0.8f
+#define TIMECREATEAPPOCALYPSE 0.5f
 #define TIMECREATEINFINITY 0.25f
-#define TIMECREATENOSTOP 0.2f
+#define TIMECREATENOSTOP 0.1f
 
 #define MODEZOMBIE 0
 #define MODEPLANT MODEZOMBIE + 1
@@ -115,6 +117,7 @@ public:
 	void CreatSunFlower(float radius, sf::Vector2f pos, bool rigidBody, int life);
 	void CreatMower(float radius, sf::Vector2f pos, bool rigidBody);
 	void CreatSaw(float radius, sf::Vector2f pos, bool rigidBody, int life);
+	void CreatCristalLight(float radius, sf::Vector2f pos, bool rigidBody, int life);
 
 	void OnEvent(const sf::Event& event);
 	void OnEventMouse(const sf::Event& event);
@@ -153,11 +156,12 @@ public:
 	void CreatNewSunFlower(float radius, bool rigidBody, int life, int line);
 	void CreatNewMower(float radius, bool rigidBody, int line);
 	void CreatNewSaw(float radius, bool rigidBody, int life, int posX);
+	void CreatNewCristalLight(float radius, bool rigidBody, int life, int line);
 
 	void IaActionPlantCreat();
 	void IACreatPeatTorch(int nbPlant, int line);
 	void IACreatMower(int line);
-	void IACreatSaw();
+	bool IACreatSaw();
 
 	void IaActionZombie();
 	void CreatZombieInLineWithNbZombie(int nbLine, int firstLine, int betweenLine);

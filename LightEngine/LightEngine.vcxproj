@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Alive.cpp" />
+    <ClCompile Include="CristalLight.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="defineShot.cpp" />
     <ClCompile Include="DummyEntity.cpp" />
@@ -47,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alive.h" />
+    <ClInclude Include="CristalLight.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="defineShot.h" />
     <ClInclude Include="DummyEntity.h" />

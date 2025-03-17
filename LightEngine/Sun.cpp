@@ -12,7 +12,7 @@ void Sun::OnCollision(Entity* other)
 {
 	if (other == nullptr)
 	{
-		Destroy();
+		ActionDead();
 	}
 }
 
@@ -22,7 +22,7 @@ void Sun::OnUpdate()
 	sf::Vector2f posMouse = garden->GetMousePosition();
 	if (IsInside(posMouse.x, posMouse.y))
 	{
-		ActionDead();
+		ActionDeadPlant();
 	}
 
 	if (garden->GetIaPlantCreat())
@@ -31,7 +31,7 @@ void Sun::OnUpdate()
 		SetDestroyTime(time - GetDeltaTime());
 		if (time < 0)
 		{
-			ActionDead();
+			ActionDeadPlant();
 		}
 	}
 
@@ -45,7 +45,7 @@ void Sun::OnUpdate()
 
 void Sun::ActionDead()
 {
-	ActionDeadPlant();
+	Destroy();
 }
 
 void Sun::ActionDeadPlant()
@@ -60,7 +60,7 @@ void Sun::ActionDeadPlant()
 	{
 		garden->IncreasePlantCoin((int)(3.562f * coef * coef * coef * coef) + 1);
 	}
-	Destroy();
+	ActionDead();
 }
 
 void Sun::ActionDeadZombie()
@@ -68,7 +68,7 @@ void Sun::ActionDeadZombie()
 	Garden* garden = GetScene<Garden>();
 	float coef = (float)GetRadius() / (float)SUNRADIUS;
 	garden->IncreaseZombieCoin((int)(100.f * coef * coef) + 1);
-	Destroy();
+	ActionDead();
 }
 
 

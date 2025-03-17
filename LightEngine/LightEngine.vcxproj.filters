@@ -71,6 +71,7 @@
     <ClCompile Include="ZombieRa.cpp" />
     <ClCompile Include="ZombieShot.cpp" />
     <ClCompile Include="defineShot.cpp" />
+    <ClCompile Include="CristalLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -131,6 +132,7 @@
     <ClInclude Include="ZombieRa.h" />
     <ClInclude Include="ZombieShot.h" />
     <ClInclude Include="defineShot.h" />
+    <ClInclude Include="CristalLight.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scene.inl">

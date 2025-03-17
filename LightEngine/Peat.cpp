@@ -114,7 +114,7 @@ void Peat::IaAction()
 						if (!EUtils::IsAreaEmptyUp(this, GetRadius() * 5))
 						{
 							/*si enemie proche sur notre ligne et celle du dessus*/
-							if (GetCanShoot()) {/*on peut tirer*/Shoot(TAGACTION4); }
+							if (GetCanShoot()) {/*on peut tirer*/Shoot(TAGACTION2); }
 							else if (GetCanReload()) {/*si peut super charger*/Reload(); }
 						}
 						else
@@ -167,7 +167,7 @@ void Peat::IaAction()
 						if (!EUtils::IsAreaEmptyDown(this, GetRadius() * 5))
 						{
 							/*si enemie proche sur notre ligne et celle du dessous*/
-							if (GetCanShoot()) {/*on peut tirer*/Shoot(TAGACTION6); }
+							if (GetCanShoot()) {/*on peut tirer*/Shoot(TAGACTION2); }
 							else if (GetCanReload()) {/*si peut super charger*/Reload(); }
 						}
 						else

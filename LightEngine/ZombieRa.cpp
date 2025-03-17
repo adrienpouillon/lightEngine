@@ -49,6 +49,7 @@ void ZombieRa::AttactSun()
 	{
 		sf::Vector2f pos = GetPosition();
 		allSun[ran]->GoToPosition(pos.x, pos.y, 100.f);
+		allSun[ran]->GetShape()->setFillColor(sf::Color::Blue);
 	}
 }
 
@@ -56,5 +57,5 @@ void ZombieRa::ActionDead()
 {
 	Zombie::ActionDead();
 	Garden* garden = GetScene<Garden>();
-	garden->IncreasePlantCoin(99);
+	garden->IncreasePlantCoin(9);
 }

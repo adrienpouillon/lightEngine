@@ -50,7 +50,7 @@ void Zombie::OnUpdate()
 	Alive::OnUpdate();
 	StateManager::OnUpdate(GetDeltaTime());
 	float zombieWidth = mShape.getRadius() * 2.f;
-	Entity::OutWindow(zombieWidth, COLLUMZOMBIE*2);
+	Entity::OutWindow(sf::Vector2f(zombieWidth, 0.f), sf::Vector2f(COLLUMZOMBIE * 2, 0.f));
 	OutGarden();
 }
 

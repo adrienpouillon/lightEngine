@@ -12,14 +12,15 @@ void Shot::OnCollision(Entity* other)
 {
 	if(other != nullptr)
 	{
-		if (GetTag() >= TYPEPLANT)
+		int myTag = GetTag();
+		if (myTag >= TYPEPLANT)
 		{
 			if (other->GetTag() <= TYPEZOMBIE)
 			{
 				Alive::LifeLessLess();
 			}
 		}
-		else if(GetTag() <= TYPEZOMBIE)
+		else if(myTag <= TYPEZOMBIE)
 		{
 			if (other->GetTag() >= TYPEPLANT)
 			{
