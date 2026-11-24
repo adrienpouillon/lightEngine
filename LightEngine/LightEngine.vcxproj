@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Aimant.cpp" />
     <ClCompile Include="Alive.cpp" />
     <ClCompile Include="CristalLight.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -47,6 +48,7 @@
     <ClCompile Include="ZombieShot.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Aimant.h" />
     <ClInclude Include="Alive.h" />
     <ClInclude Include="CristalLight.h" />
     <ClInclude Include="Debug.h" />

@@ -22,6 +22,8 @@ public:
 	float GetDestroyTime();
 
 	void SetFallSun();
+
+	int GetCoefSun()
 	
 };
 

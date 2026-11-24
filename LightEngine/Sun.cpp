@@ -1,6 +1,7 @@
 #include "Sun.h"
 #include "Garden.h"
 #include "Zombie.h"
+#include "CristalLight.h"
 
 void Sun::OnInitialize()
 {
@@ -13,6 +14,14 @@ void Sun::OnCollision(Entity* other)
 	if (other == nullptr)
 	{
 		ActionDead();
+	}
+	else
+	{
+		if (CristalLight* cristalLight = dynamic_cast<CristalLight*>(other))
+		{
+			cristalLight->IncreaseCoin(GetCoefSun()*10);
+			ActionDead();
+		}
 	}
 }
 
@@ -51,15 +60,7 @@ void Sun::ActionDead()
 void Sun::ActionDeadPlant()
 {
 	Garden* garden = GetScene<Garden>();
-	float coef = (float)GetRadius() / (float)SUNRADIUS;
-	if(coef == 1)
-	{
-		garden->IncreasePlantCoin((int)(3.562f) + 1);
-	}
-	else
-	{
-		garden->IncreasePlantCoin((int)(3.562f * coef * coef * coef * coef) + 1);
-	}
+	garden->IncreasePlantCoin(GetCoefSun());
 	ActionDead();
 }
 
@@ -90,5 +91,18 @@ void Sun::SetFallSun()
 	{
 		int ran = Garden::GenerateRandomNumber(0, 20);
 		GoToPosition(pos.x, pos.y + (float)(size.y * 2), 100.f + (float)ran, false);
+	}
+}
+
+int Sun::GetCoefSun()
+{
+	float coef = (float)GetRadius() / (float)SUNRADIUS;
+	if (coef == 1)
+	{
+		return (int)(3.562f) + 1
+	}
+	else
+	{
+		return (int)(3.562f * coef * coef * coef * coef) + 1;
 	}
 }

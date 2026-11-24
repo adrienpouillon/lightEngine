@@ -90,6 +90,7 @@
     <ClCompile Include="ZombieShot.cpp">
       <Filter>PVZ</Filter>
     </ClCompile>
+    <ClCompile Include="Aimant.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -167,6 +168,7 @@
     <ClInclude Include="ZombieShot.h">
       <Filter>PVZ</Filter>
     </ClInclude>
+    <ClInclude Include="Aimant.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scene.inl">
