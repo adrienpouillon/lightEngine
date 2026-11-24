@@ -31,5 +31,7 @@ public:
 
 	int GetCoin();
 
+	void CustomShoot(ShotVariable shotVarible, int tag);
+
 };
 

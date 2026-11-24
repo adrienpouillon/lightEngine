@@ -12,6 +12,7 @@ GameManager::GameManager()
 {
 	mpWindow = nullptr;
 	mDeltaTime = 0.0f;
+	mDeltaTimeScale = 1.f;
 	mpScene = nullptr;
 	mWindowWidth = -1;
 	mWindowHeight = -1;
@@ -65,7 +66,7 @@ void GameManager::Run()
 	sf::Clock clock;
 	while (mpWindow->isOpen())
 	{
-		SetDeltaTime(clock.restart().asSeconds());
+		SetDeltaTime(clock.restart().asSeconds() * mDeltaTimeScale);
 
 		HandleInput();
 

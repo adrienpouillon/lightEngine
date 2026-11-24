@@ -28,6 +28,7 @@ class GameManager
 	Scene* mpScene;
 
 	float mDeltaTime;
+	float mDeltaTimeScale;
 
 	int mWindowWidth;
 	int mWindowHeight;
@@ -57,6 +58,7 @@ public:
 	void LaunchScene();
 
 	float GetDeltaTime() const { return mDeltaTime; }
+	void SetDeltaTimeScale(float deltaTimeScale) { mDeltaTimeScale = deltaTimeScale; }
 	Scene* GetScene() const { return mpScene; }
 	sf::Font& GetFont() { return mFont; };
 	std::list<Entity*>* GetTabEntity() { return &mEntities; }

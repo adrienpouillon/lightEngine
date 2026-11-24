@@ -16,10 +16,24 @@
 #define STARTAREACREATPLANT 100
 #define BETEWEENPLANT 150
 #define NBPLANT 10
+#define NBSAW NBPLANT - 1
+#define NBMOWER 1
+#define NBTOTALPLANT NBPLANT + NBSAW + NBMOWER
 #define ENDAREACREATPLANT STARTAREACREATPLANT + (BETEWEENPLANT * NBPLANT)
 #define STARTAREACREATMOWER STARTAREACREATPLANT - 112
 #define STARTAREACREATSAW STARTAREACREATPLANT + (BETEWEENPLANT/2)
 #define ENDAREACREATSAW STARTAREACREATSAW + (BETEWEENPLANT * (NBPLANT - 1))
+
+#define AREAPLANTX0 STARTAREACREATPLANT
+#define AREAPLANTX1 AREAPLANTX0 + BETEWEENPLANT
+#define AREAPLANTX2 AREAPLANTX1 + BETEWEENPLANT
+#define AREAPLANTX3 AREAPLANTX2 + BETEWEENPLANT
+#define AREAPLANTX4 AREAPLANTX3 + BETEWEENPLANT
+#define AREAPLANTX5 AREAPLANTX4 + BETEWEENPLANT
+#define AREAPLANTX6 AREAPLANTX5 + BETEWEENPLANT
+#define AREAPLANTX7 AREAPLANTX6 + BETEWEENPLANT
+#define AREAPLANTX8 AREAPLANTX7 + BETEWEENPLANT
+#define AREAPLANTX9 AREAPLANTX8 + BETEWEENPLANT
 
 
 #define LIFEPLANT 3
@@ -43,7 +57,7 @@
 #define COSTPLANTPEAT (100 - 1)
 #define COSTPLANTTORCH (200 - 1)
 #define COSTPLANTSUNFLOWER (200 - 1)
-#define COSTPLANTMOWER (250 - 1)
+#define COSTPLANTMOWER (300 - 1)
 #define COSTPLANTSAW (250 - 1)
 #define COSTPLANTCRISTALLIGHT (100 - 1)
 
@@ -151,16 +165,16 @@ public:
 
 	void CountWave();
 
-	void CreatNewPeat(float radius, bool rigidBody, int life, int line);
-	void CreatNewTorch(float radius, bool rigidBody, int life, int line);
-	void CreatNewSunFlower(float radius, bool rigidBody, int life, int line);
-	void CreatNewMower(float radius, bool rigidBody, int line);
-	void CreatNewSaw(float radius, bool rigidBody, int life, int posX);
-	void CreatNewCristalLight(float radius, bool rigidBody, int life, int line);
+	bool CreatNewPeat(float radius, bool rigidBody, int life, int line);
+	bool CreatNewTorch(float radius, bool rigidBody, int life, int line);
+	bool CreatNewSunFlower(float radius, bool rigidBody, int life, int line);
+	bool CreatNewMower(float radius, bool rigidBody, int line);
+	bool CreatNewSaw(float radius, bool rigidBody, int life, int posX);
+	bool CreatNewCristalLight(float radius, bool rigidBody, int life, int line);
 
 	void IaActionPlantCreat();
-	void IACreatPeatTorch(int nbPlant, int line);
-	void IACreatMower(int line);
+	bool IACreatPeatTorch(int nbPlant, int line);
+	bool IACreatMower(int line);
 	bool IACreatSaw();
 
 	void IaActionZombie();

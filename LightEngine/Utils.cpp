@@ -67,14 +67,10 @@ namespace LineUtils
 {
 	int SeachLine(int y)
 	{
-		if (y > LINEONE - HEIGHTLINE / 2 && y < LINEONE + HEIGHTLINE / 2)
-		{return LINEONE;}
-
-		if (y > LINETWO - HEIGHTLINE / 2 && y < LINETWO + HEIGHTLINE / 2)
-		{return LINETWO;}
-
-		if (y > LINETHREE - HEIGHTLINE / 2 && y < LINETHREE + HEIGHTLINE / 2)
-		{return LINETHREE;}
+		int halfHeight = HEIGHTLINE * 0.5;
+		if (y > LINEONE - halfHeight && y < LINEONE + halfHeight) { return LINEONE; }
+		if (y > LINETWO - halfHeight && y < LINETWO + halfHeight) { return LINETWO; }
+		if (y > LINETHREE - halfHeight && y < LINETHREE + halfHeight) { return LINETHREE; }
 
 		return LINEONE;
 	}
@@ -82,7 +78,7 @@ namespace LineUtils
 	int RandomLine(int nbLine, int firstLine, int betweenLine)
 	{
 		int ran = Garden::GenerateRandomNumber(1, nbLine);
-		return ((ran * firstLine) + ((betweenLine - firstLine) * (ran - 1)));
+		return (/*(ran * */firstLine/*)*/ + (/*(*/betweenLine /* - firstLine)*/ * (ran - 1)));
 	}
 
 	int LineLessEntity(int nbEntityInLineOne, int nbEntityInLineTwo, int nbEntityInLineThree)
@@ -266,9 +262,28 @@ namespace MUtils
 		for (int i = 0; i < lenght; ++i)
 		{
 			if (allMower[i]->GetPosition().x > STARTAREACREATMOWER - 100 && allMower[i]->GetPosition().x < size.x)
-			{allMowerInLine.push_back(allMower[i]);}
+			{
+				allMowerInLine.push_back(allMower[i]);
+			}
 		}
 		return allMowerInLine;
+	}
+
+	std::vector<Mower*> AllMowerStart(int line, float offsetMinPosX)
+	{
+		float posMinX = STARTAREACREATMOWER + offsetMinPosX;
+		std::vector<Mower*> allMowerStart;
+		sf::Vector2i size = GameManager::Get()->GetWindowSize();
+		std::vector<Mower*> allMower = EUtils::AllEntityInline<Mower>(line);
+		int lenght = allMower.size();
+		for (int i = 0; i < lenght; ++i)
+		{
+			if (allMower[i]->GetPosition().x > posMinX && allMower[i]->GetPosition().x < size.x)
+			{
+				allMowerStart.push_back(allMower[i]);
+			}
+		}
+		return allMowerStart;
 	}
 }
 

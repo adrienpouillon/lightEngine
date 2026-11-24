@@ -35,13 +35,13 @@ void SunFlower::IaAction()
 		Garden* garden = GetScene<Garden>();
 		bool noPlantUp = EUtils::IsEmptyEntityInLineUp<Plant>(this);
 		bool noPlantDown = EUtils::IsEmptyEntityInLineDown<Plant>(this);
-		if (garden->GetPlantCoin() < 0)
+		if (garden->GetPlantCoin() < 100)
 		{
 			/*il y a moins de 0 soleil*/
 			if (noPlantUp && noPlantDown)
 			{
 				/*il y a pas de plante au dessus et en desssous*/
-				if (!EUtils::IsAreaEmpty(this, GetRadius() * 5))
+				if (!EUtils::IsAreaEmpty(this, GetRadius() * 10))
 				{
 					if (GetCanBoost()){/*on peut booster*/Boost(TAGACTION6);}
 					else if (GetCanReload()) {/*on peut super recharger*/SuperReload(); }
@@ -64,7 +64,7 @@ void SunFlower::IaAction()
 			if (noPlantUp && noPlantDown)
 			{
 				/*il y a pas de plante au dessus et en desssous*/
-				if (garden->GetPlantCoin() < 500){IsAreaEmptyAction(TAGACTION2, TAGACTION4);}
+				if (garden->GetPlantCoin() < 300){IsAreaEmptyAction(TAGACTION2, TAGACTION4);}
 				else{IsAreaEmptyAction(TAGACTION3, TAGACTION4);}
 			}
 			else

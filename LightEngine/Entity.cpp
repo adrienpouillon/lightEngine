@@ -38,8 +38,9 @@ void Entity::Repulse(Entity* other)
 
 	sf::Vector2f translation = overlap * normal;
 
-	sf::Vector2f position1 = GetPosition(0.5f, 0.5f) - translation;
-	sf::Vector2f position2 = other->GetPosition(0.5f, 0.5f) + translation;
+	float deltaTime = GetDeltaTime() * 60.f;
+	sf::Vector2f position1 = GetPosition(0.5f, 0.5f) - translation * deltaTime;
+	sf::Vector2f position2 = other->GetPosition(0.5f, 0.5f) + translation * deltaTime;
 
 	SetPosition(position1.x, position1.y, 0.5f, 0.5f);
 	other->SetPosition(position2.x, position2.y, 0.5f, 0.5f);

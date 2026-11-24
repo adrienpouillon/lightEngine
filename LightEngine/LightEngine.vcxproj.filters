@@ -21,7 +21,6 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Debug.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -64,14 +63,33 @@
     <ClCompile Include="Torch.cpp">
       <Filter>PVZ</Filter>
     </ClCompile>
-    <ClCompile Include="SunFlower.cpp" />
-    <ClCompile Include="Sun.cpp" />
-    <ClCompile Include="Mower.cpp" />
-    <ClCompile Include="Saw.cpp" />
-    <ClCompile Include="ZombieRa.cpp" />
-    <ClCompile Include="ZombieShot.cpp" />
-    <ClCompile Include="defineShot.cpp" />
-    <ClCompile Include="CristalLight.cpp" />
+    <ClCompile Include="CristalLight.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="defineShot.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Mower.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Saw.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Sun.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="SunFlower.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="ZombieRa.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
+    <ClCompile Include="ZombieShot.cpp">
+      <Filter>PVZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -125,14 +143,30 @@
     <ClInclude Include="Torch.h">
       <Filter>PVZ</Filter>
     </ClInclude>
-    <ClInclude Include="SunFlower.h" />
-    <ClInclude Include="Sun.h" />
-    <ClInclude Include="Mower.h" />
-    <ClInclude Include="Saw.h" />
-    <ClInclude Include="ZombieRa.h" />
-    <ClInclude Include="ZombieShot.h" />
-    <ClInclude Include="defineShot.h" />
-    <ClInclude Include="CristalLight.h" />
+    <ClInclude Include="CristalLight.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="defineShot.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Mower.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Saw.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Sun.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="SunFlower.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="ZombieRa.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
+    <ClInclude Include="ZombieShot.h">
+      <Filter>PVZ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Scene.inl">

@@ -93,6 +93,7 @@ public:
 
     Scene* GetScene() const;
 	float GetDeltaTime() const;
+	float SetDeltaTime();
 
 	//for creat entity
     template<typename T>

@@ -100,6 +100,7 @@ namespace SUtils
 namespace MUtils
 {
 	std::vector<Mower*> AllMowerInline(int line);
+	std::vector<Mower*> AllMowerStart(int line, float offsetMinPosX);
 }
 
 namespace TypeUtils
@@ -225,7 +226,8 @@ namespace EUtils
 		int lenght = allEntity.size();
 		for (int i = 0; i < lenght; ++i)
 		{
-			if (allEntity[i]->GetPosition().y > line - HEIGHTLINE / 3 && allEntity[i]->GetPosition().y < line + HEIGHTLINE / 3)
+			float thirdHeightLine = HEIGHTLINE / 3;
+			if (allEntity[i]->GetPosition().y > (line - thirdHeightLine) && allEntity[i]->GetPosition().y < (line + thirdHeightLine))
 			{
 				allEntityInLine.push_back(allEntity[i]);
 			}
@@ -236,8 +238,8 @@ namespace EUtils
 	template<typename T>
 	inline int NbEntityInLine(int line)
 	{
-		std::vector<T*> allZombie = EUtils::AllEntityInline<T>(line);
-		return (int)allZombie.size();
+		std::vector<T*> allEntity = EUtils::AllEntityInline<T>(line);
+		return (int)allEntity.size();
 	}
 }
 

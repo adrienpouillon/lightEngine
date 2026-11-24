@@ -296,10 +296,10 @@ void StateManager::Boost(int tag)
 		AmmoLessLess();
 		OnBoost(tag);
 	}
-	else
-	{
-		std::cout << "..." << std::endl;
-	}
+	//else
+	//{
+		//std::cout << "..." << std::endl;
+	//}
 }
 
 void StateManager::Reload()
@@ -322,7 +322,7 @@ void StateManager::Reload()
 			SetAmmo(mCapacity);
 		}
 		
-		std::cout << "recharge de munition" << std::endl;
+		//std::cout << "recharge de munition" << std::endl;
 	}
 	else
 	{

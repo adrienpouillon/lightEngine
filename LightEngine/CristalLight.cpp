@@ -36,7 +36,7 @@ void CristalLight::OnUpdate()
 	Plant::OnUpdate();
 	
 	Garden* garden = GetScene<Garden>();
-	if (garden->GetIaPlantCreat())
+	if (!garden->GetIaPlantCreat())
 	{
 		MoreCoin();
 	}
@@ -347,4 +347,10 @@ void CristalLight::IncreaseCoin(int coin)
 int CristalLight::GetCoin()
 {
 	return mCoin;
+}
+
+void CristalLight::CustomShoot(ShotVariable shotVarible, int tag)
+{
+	mShotVarible = shotVarible;
+	Shoot(tag);
 }
